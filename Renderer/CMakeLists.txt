@@ -16,12 +16,14 @@ set(INCLUDE_FILE
     include/Map.hpp
     include/Settings.hpp
     include/Clock.hpp
+    include/Skin.hpp
 )
 set(SOURCE_FILE
     src/Renderer.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp
     src/Clock/Clock.cpp
+    src/Skin/Skin.cpp
 )
 
 add_library(
