@@ -1,19 +1,19 @@
 #include "Settings.hpp"
-#include <iostream>
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 #include <sstream>
-#include <iomanip>
+
+namespace fs = std::filesystem;
 
 #include "../InputFacet/InputFacet.hpp"
 
-Settings::Settings(std::string section) : _section(section)
-{
-}
+Settings::Settings(std::string section) : _section(section) {}
 
-Settings::Settings(const std::string &pathToOsuFile, std::string section) :
+Settings::Settings(const std::string &pathToFile, std::string section) :
     _section(section)
 {
-    loadFromOsuFile(pathToOsuFile);
+    loadFromFile(pathToFile);
 }
 
 Settings::Settings(std::istream &stream, std::string section) :
@@ -22,10 +22,17 @@ Settings::Settings(std::istream &stream, std::string section) :
     loadFromInputStream(stream);
 }
 
-void Settings::loadFromOsuFile(const std::string &pathToOsuFile)
+void Settings::loadFromFile(const std::string &pathToFile)
 {
-    std::ifstream f(pathToOsuFile);
-    loadFromInputStream(f);
+    if (fs::exists(pathToFile))
+    {
+        std::ifstream f(pathToOsuFile);
+        loadFromInputStream(f);
+    }
+    else
+    {
+        std::cerr << "[Settings] Cannot find " << pathToFile << "!\n";
+    }
 }
 
 void Settings::loadFromInputStream(std::istream &stream)
@@ -51,7 +58,7 @@ void Settings::loadFromInputStream(std::istream &stream)
     }
 }
 
-const std::string& Settings::operator[](const std::string& s) const
+const std::string &Settings::operator[](const std::string &s) const
 {
     return _valueMap.at(s);
 }

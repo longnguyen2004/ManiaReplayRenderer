@@ -1,7 +1,7 @@
 #include "Clock.hpp"
 
-#include <iostream>
 #include <cmath>
+#include <iostream>
 #include <thread>
 
 using namespace std::chrono_literals;
@@ -49,27 +49,12 @@ void Clock::reset()
     _frameCount = 0;
 }
 
-void Clock::setEpoch()
-{
-    _wakeTime = std::chrono::steady_clock::now();
-}
+void Clock::setEpoch() { _wakeTime = std::chrono::steady_clock::now(); }
 
-std::int64_t Clock::getCurrentTime() const
-{
-    return _elapsedTime + _offset;
-}
+std::int64_t Clock::getCurrentTime() const { return _elapsedTime + _offset; }
 
-std::int64_t Clock::getElapsedTime() const
-{
-    return _elapsedTime;
-}
+std::int64_t Clock::getElapsedTime() const { return _elapsedTime; }
 
-bool Clock::nextFrame() const
-{
-    return _nextFrame;
-}
+bool Clock::nextFrame() const { return _nextFrame; }
 
-std::size_t Clock::getFrameCount() const
-{
-    return _frameCount;
-}
+std::size_t Clock::getFrameCount() const { return _frameCount; }

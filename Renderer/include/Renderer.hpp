@@ -4,8 +4,8 @@
 #include "Export.hpp"
 #include <SFML/Graphics.hpp>
 
-#include "Map.hpp"
 #include "Clock.hpp"
+#include "Map.hpp"
 
 class RENDERERLIB_EXPORT Renderer
 {
@@ -21,7 +21,6 @@ private:
     sf::Sprite _mapBG_sprite;
 
     void initBG();
-
 
 public:
     Renderer(sf::RenderTarget *target, Map *map, Clock *clock);

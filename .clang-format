@@ -1,0 +1,19 @@
+# Indent
+IndentWidth: 4
+AccessModifierOffset: -4
+
+# Alignment
+AlignAfterOpenBracket: DontAlign
+AlignConsecutiveDeclarations: false
+AlignOperands: true
+
+# Braces
+BreakBeforeBraces: Allman
+
+# Constructor initializers
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+
+# Line endings
+DeriveLineEnding: false
+UseCRLF: false

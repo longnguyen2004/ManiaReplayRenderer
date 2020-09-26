@@ -2,8 +2,8 @@
 #define RENDERERLIB_CLOCK_HPP
 
 #include "Export.hpp"
-#include <cstdint>
 #include <chrono>
+#include <cstdint>
 
 class RENDERERLIB_EXPORT Clock
 {

@@ -13,11 +13,11 @@
  * Map(const std::string&) : load from file
  * Map(std::istream&)      : load from stream
  * ~Map()                  : destructor
- * 
+ *
  * Load functions:
  * loadFromOsuFile(const std::string&) : load from file, called by ctor
  * loadFromInputStream(std::istream&)  : load from stream, called by ctor
- * 
+ *
  * Getter:
  * Settings getGeneralSettings()
  * Settings getMetadata()
@@ -34,18 +34,17 @@ public:
 
     void loadFromOsuFile(const std::string &pathToOsuFile);
     void loadFromInputStream(std::istream &stream);
-    
-    const std::string& getMapDirectory() const;
-    const std::string& getBGFilename() const;
 
-    const Settings& getGeneralSetings() const;
-    const Settings& getMetadata() const;
-    const Settings& getDifficultySettings() const;
+    const std::string &getMapDirectory() const;
+    const std::string &getBGFilename() const;
+
+    const Settings &getGeneralSetings() const;
+    const Settings &getMetadata() const;
+    const Settings &getDifficultySettings() const;
 
 private:
     Settings _general, _metadata, _difficulty;
     std::string _parentDir, _BGname;
 };
 
-#undef make_ctor_dtor_loadfunc
 #endif

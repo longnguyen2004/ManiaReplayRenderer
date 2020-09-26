@@ -1,19 +1,20 @@
-#include <iostream>
 #include <cctype>
 #include <chrono>
+#include <iostream>
 
 #ifdef _WIN32
 #include <locale> // for UTF-8 trickery
 #endif
 
-#include <SFML/Graphics.hpp>
-#include "Renderer.hpp"
-#include "Map.hpp"
 #include "Clock.hpp"
+#include "Map.hpp"
+#include "Renderer.hpp"
+#include <SFML/Graphics.hpp>
 
 #include <nlohmann/json.hpp>
 
 using namespace std::chrono;
+using json = nlohmann::json;
 
 int main(int argc, char const *argv[])
 {
@@ -21,12 +22,13 @@ int main(int argc, char const *argv[])
     // for UTF-8 file names to work
     std::locale::global(std::locale(".65001"));
 #endif
-    std::string fileName("map test\\Jun Kuroda + AAAA - Ultimate Fate (Kawawa) [The Apocalypse].osu");
+
+    std::string fileName("map test\\Jun Kuroda + AAAA - Ultimate Fate (Kawawa) "
+                         "[The Apocalypse].osu");
     std::cout << "[Main] Loading map file " << fileName << '\n';
     Map testMap(fileName);
     std::cout << "[Main] Creating window with resolution 1280x720\n";
-    sf::RenderWindow window(sf::VideoMode(1280, 720),
-                            "Test");
+    sf::RenderWindow window(sf::VideoMode(1280, 720), "Test");
     Clock clock(0.0);
     Renderer renderer(&window, &testMap, &clock);
     sf::Event event;
@@ -45,7 +47,8 @@ int main(int argc, char const *argv[])
         {
             double fps = clock.getFrameCount() * 1000.0 / elapsed_time;
             std::cout << "\r               ";
-            std::cout << "\r" << "FPS: " << fps;
+            std::cout << "\r"
+                      << "FPS: " << fps;
         }
         while (window.pollEvent(event))
         {
