@@ -9,8 +9,9 @@
 #include "Clock.hpp"
 #include "Map.hpp"
 #include "Renderer.hpp"
-#include <SFML/Graphics.hpp>
+#include "Skin.hpp"
 
+#include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
 
 using namespace std::chrono;
@@ -23,12 +24,17 @@ int main(int argc, char const *argv[])
     std::locale::global(std::locale(".65001"));
 #endif
 
-    std::string fileName("map test\\Jun Kuroda + AAAA - Ultimate Fate (Kawawa) "
-                         "[The Apocalypse].osu");
-    std::cout << "[Main] Loading map file " << fileName << '\n';
-    Map testMap(fileName);
-    std::cout << "[Main] Creating window with resolution 1280x720\n";
-    sf::RenderWindow window(sf::VideoMode(1280, 720), "Test");
+    std::string mapFile(
+        "G:/osu test/Jun Kuroda + AAAA - Ultimate Fate (Kawawa) "
+        "[The Apocalypse].osu");
+    std::cout << "[Main] Loading map file " << mapFile << '\n';
+    Map testMap(mapFile);
+    std::string skinFolder(
+        "C:/Users/nghuu/AppData/Local/osu!/Skins/R Skin v3.0 (Bars)");
+    Skin testSkin(skinFolder);
+    std::cout << "[Main] Skin name: ";
+    std::cout << "[Main] Creating window with resolution 854x480\n";
+    sf::RenderWindow window(sf::VideoMode(854, 480), "Test");
     Clock clock(0.0);
     Renderer renderer(&window, &testMap, &clock);
     sf::Event event;
@@ -41,7 +47,8 @@ int main(int argc, char const *argv[])
         {
             window.display();
             auto end = steady_clock::now();
-            elapsed_time = duration_cast<milliseconds>(end - start).count();
+            elapsed_time =
+                duration_cast<milliseconds>(end - start).count();
         }
         if (clock.getElapsedTime() % 250 == 0)
         {
