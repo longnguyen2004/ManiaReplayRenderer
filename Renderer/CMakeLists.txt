@@ -24,6 +24,7 @@ set(SOURCE_FILE
     src/Settings/Settings.cpp
     src/Clock/Clock.cpp
     src/Skin/Skin.cpp
+    src/ANSIEscape/Color.cpp
 )
 
 add_library(

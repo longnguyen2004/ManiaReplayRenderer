@@ -5,8 +5,8 @@
 
 namespace Color
 {
-std::ostream &Error(std::ostream &stream) { return stream << "\033[31m"; }
-std::ostream &Reset(std::ostream &stream) { return stream << "\033[m"; }
+std::ostream &Error(std::ostream &stream);
+std::ostream &Reset(std::ostream &stream);
 } // namespace Color
 
 #endif
