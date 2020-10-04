@@ -26,7 +26,7 @@ void Settings::loadFromFile(const std::string &pathToFile)
 {
     if (fs::exists(pathToFile))
     {
-        std::ifstream f(pathToOsuFile);
+        std::ifstream f(pathToFile);
         loadFromInputStream(f);
     }
     else
@@ -60,5 +60,8 @@ void Settings::loadFromInputStream(std::istream &stream)
 
 const std::string &Settings::operator[](const std::string &s) const
 {
-    return _valueMap.at(s);
+    if (auto it = _valueMap.find(s); it != _valueMap.end())
+        return it->second;
+    else
+        return "";
 }
