@@ -14,8 +14,8 @@ BreakBeforeBraces: Allman
 BreakConstructorInitializers: AfterColon
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 
-# Line length
-ColumnLimit: 75
+# Function blocks
+AllowShortFunctionsOnASingleLine: true
 
 # Line endings
 DeriveLineEnding: false
