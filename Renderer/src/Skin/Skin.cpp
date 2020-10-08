@@ -40,7 +40,16 @@ void Skin::loadSkinSettings(const std::string &pathToSkinIni)
 {
     std::cout << "[Skin] Loading skin.ini\n";
     std::ifstream skinIni(pathToSkinIni);
+    std::cout << "[Skin] Loading general settings\n";
     _general.loadFromInputStream(skinIni);
+    std::cout << "[Skin] Loading color settings\n";
     _colors.loadFromInputStream(skinIni);
+    std::cout << "[Skin] Loading font settings\n";
     _fonts.loadFromInputStream(skinIni);
+    while (skinIni)
+    {
+        _maniaSettings.emplace_back(skinIni, "[Mania]");
+        std::cout << "[Skin::Mania] Loaded settings for "
+                  << _maniaSettings.back()["Keys"] << "k\n";
+    }
 }

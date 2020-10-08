@@ -17,6 +17,7 @@ public:
 
 private:
     Settings _general, _colors, _fonts;
+    std::vector<Settings> _maniaSettings;
     std::string _skinFolder;
     void loadSkinSettings(const std::string &pathToSkinIni);
 };
