@@ -45,8 +45,11 @@ void Map::loadFromOsuFile(const std::string &pathToOsuFile)
 void Map::loadFromInputStream(std::istream &stream)
 {
     std::cout << "[Map] Loading from stream\n";
+    std::cout << "[Map::Settings] Loading general settings\n";
     _general.loadFromInputStream(stream);
+    std::cout << "[Map::Settings] Loading metadata\n";
     _metadata.loadFromInputStream(stream);
+    std::cout << "[Map::Settings] Loading difficulty settings\n";
     _difficulty.loadFromInputStream(stream);
 
     std::string s;
