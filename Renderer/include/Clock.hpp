@@ -14,7 +14,6 @@ public:
     void tick(bool sleepOnTick = false);
     std::int64_t getCurrentTime() const;
     std::int64_t getElapsedTime() const;
-    std::size_t getFrameCount() const;
     bool nextFrame() const;
     void reset();
     void setEpoch();
@@ -25,8 +24,7 @@ private:
     std::int64_t _elapsedTime;
     double _nextFrameTime;
     bool _nextFrame;
-    std::size_t _frameCount;
-    std::chrono::time_point<std::chrono::steady_clock> _wakeTime;
+    std::chrono::steady_clock::time_point _wakeTime;
 };
 
 #endif
