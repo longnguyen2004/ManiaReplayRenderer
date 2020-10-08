@@ -37,7 +37,6 @@ void Settings::loadFromFile(const std::string &pathToFile)
 
 void Settings::loadFromInputStream(std::istream &stream)
 {
-    std::cout << "[Settings] Loading settings section " << _section << '\n';
     std::string s;
     do
     {
@@ -46,7 +45,8 @@ void Settings::loadFromInputStream(std::istream &stream)
     while (stream && (stream.peek() != '['))
     {
         std::getline(stream, s);
-        if (!s.empty()) // don't handle empty lines
+        // don't handle empty lines and comments
+        if (!s.empty() && s.find("//") != 0)
         {
             std::istringstream is(s);
             is.imbue(std::locale(is.getloc(), new ColonAsWhitespace()));
