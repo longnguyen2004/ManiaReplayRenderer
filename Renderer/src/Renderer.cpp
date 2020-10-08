@@ -5,8 +5,9 @@
 namespace fs = std::filesystem;
 
 Renderer::Renderer(sf::RenderTarget *target, Map *map, Clock *clock) :
-    _target(target), _clock(clock), _width(_target->getSize().x),
-    _height(_target->getSize().y), _scalingFactor(_height / 480.0f), _map(map)
+    _target(target), _clock(clock), _frameCount(0),
+    _width(_target->getSize().x), _height(_target->getSize().y),
+    _scalingFactor(_height / 480.0f), _map(map)
 {
     std::cout << "[Renderer] Renderer settings:\n";
     std::cout << "[Renderer] Resolution: " << _width << 'x' << _height << '\n';
@@ -33,6 +34,7 @@ bool Renderer::drawNextFrame()
     {
         _target->clear();
         _target->draw(_mapBG_sprite);
+        ++_frameCount;
         return true;
     }
     else
@@ -40,3 +42,5 @@ bool Renderer::drawNextFrame()
         return false;
     }
 }
+
+std::size_t Renderer::getFrameCount() const { return _frameCount; }
