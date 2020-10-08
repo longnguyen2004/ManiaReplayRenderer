@@ -19,7 +19,7 @@ set(INCLUDE_FILE
     include/Skin.hpp
 )
 set(SOURCE_FILE
-    src/Renderer.cpp
+    src/Renderer/Renderer.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp
     src/Clock/Clock.cpp
