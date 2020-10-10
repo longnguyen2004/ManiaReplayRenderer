@@ -27,12 +27,12 @@ private:
     std::size_t _frameCount;
 
     Clock *_clock;
-
     Map *_map;
+    Skin *_skin;
+
     sf::Texture _mapBG;
     sf::Sprite _mapBG_sprite;
 
-    Skin *_skin;
     class Stage;
 
     std::unique_ptr<Stage> _stage;
@@ -48,13 +48,14 @@ public:
 private:
     Renderer *_ren;
     std::list<sf::RectangleShape> _columns;
-    unsigned int _stageStart, _stageEnd;
-    sf::Texture _stageLeft, _stageRight;
-    sf::Sprite _stageLeft_sprite, _stageRight_sprite;
+    unsigned int _stageStart, _stageEnd, _hitPos;
+    unsigned int _keys;
+    sf::Texture _stageLeft, _stageRight, _stageHint;
+    sf::Sprite _stageLeft_sprite, _stageRight_sprite, _stageHint_sprite;
     void createColumns();
     void drawColumns();
-    void loadStageLeftRight();
-    void drawStageLeftRight();
+    void loadStageLeftRightHint();
+    void drawStageLeftRightHint();
 };
 
 #endif
