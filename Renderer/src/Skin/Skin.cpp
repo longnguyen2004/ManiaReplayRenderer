@@ -79,6 +79,9 @@ const Settings &Skin::getColorSettings() const { return _colors; }
 const Settings &Skin::getFontSettings() const { return _fonts; }
 const Settings &Skin::getManiaSettings(int keys) const
 {
-    return *std::find_if(_maniaSettings.begin(), _maniaSettings.end(),
-        [keys](const Settings &a) { return keys == std::stoi(a["Keys"]); });
+    if (auto it = std::find_if(_maniaSettings.begin(), _maniaSettings.end(),
+            [keys](const Settings &a) { return keys == std::stoi(a["Keys"]); });
+        it != _maniaSettings.end())
+        return *it;
+    else return {};
 }
