@@ -11,10 +11,15 @@ AlignOperands: true
 BreakBeforeBraces: Allman
 
 # Constructor initializers
+AllowAllConstructorInitializersOnNextLine: true
 BreakConstructorInitializers: AfterColon
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
 
-# Function blocks
+# Column limit
+ColumnLimit: 85
+
+# Functions
+BinPackParameters: false
 AllowShortFunctionsOnASingleLine: true
 
 # Line endings
