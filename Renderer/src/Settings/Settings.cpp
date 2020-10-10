@@ -16,8 +16,7 @@ Settings::Settings(const std::string &pathToFile, std::string section) :
     loadFromFile(pathToFile);
 }
 
-Settings::Settings(std::istream &stream, std::string section) :
-    _section(section)
+Settings::Settings(std::istream &stream, std::string section) : _section(section)
 {
     loadFromInputStream(stream);
 }
@@ -37,6 +36,7 @@ void Settings::loadFromFile(const std::string &pathToFile)
 
 void Settings::loadFromInputStream(std::istream &stream)
 {
+    _valueMap.clear();
     std::string s;
     do
     {
