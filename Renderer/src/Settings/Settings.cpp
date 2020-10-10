@@ -2,11 +2,9 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <sstream>
+#include <regex>
 
 namespace fs = std::filesystem;
-
-#include "../InputFacet/InputFacet.hpp"
 
 Settings::Settings(std::string section) : _section(section) {}
 
@@ -36,6 +34,7 @@ void Settings::loadFromFile(const std::string &pathToFile)
 
 void Settings::loadFromInputStream(std::istream &stream)
 {
+    static std::regex match_regex(R"((\w+) ?: ?(.+))");
     _valueMap.clear();
     std::string s;
     do
@@ -46,14 +45,12 @@ void Settings::loadFromInputStream(std::istream &stream)
     {
         std::getline(stream, s);
         // don't handle empty lines and comments
-        if (!s.empty() && s.find("//") != 0)
+        if (auto pos = s.find("//"); pos != std::string::npos)
+            s.resize(pos);
+        if (std::smatch result;
+            !s.empty() && std::regex_match(s, result, match_regex))
         {
-            std::istringstream is(s);
-            is.imbue(std::locale(is.getloc(), new ColonAsWhitespace()));
-            std::string key, value;
-            is >> key >> std::ws;
-            std::getline(is, value);
-            _valueMap[key] = value;
+            _valueMap[result[1]] = result[2];
         }
     }
 }
