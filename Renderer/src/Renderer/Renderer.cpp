@@ -5,11 +5,17 @@
 
 namespace fs = std::filesystem;
 
-Renderer::Renderer(sf::RenderTarget *target, Map *map, Clock *clock) :
-    _target(target), _clock(clock), _frameCount(0),
-    _width(_target->getSize().x), _height(_target->getSize().y),
-    _scalingFactor(_height / 480.0f), _map(map)
+Renderer::Renderer(sf::RenderTarget *target, Map *map, Skin *skin, Clock *clock) :
+    _target(target),
+    _clock(clock),
+    _frameCount(0),
+    _width(_target->getSize().x),
+    _height(_target->getSize().y),
+    _scalingFactor(_height / 480.0f),
+    _map(map),
+    _skin(skin)
 {
+    _stage = std::make_unique<Stage>(this);
     std::cout << "[Renderer] Renderer settings:\n";
     std::cout << "[Renderer] Resolution: " << _width << 'x' << _height << '\n';
     initBG();
@@ -33,6 +39,7 @@ bool Renderer::drawNextFrame()
     {
         _target->clear();
         _target->draw(_mapBG_sprite);
+        _stage->drawNextFrame();
         ++_frameCount;
         return true;
     }

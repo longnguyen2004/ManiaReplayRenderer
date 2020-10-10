@@ -22,6 +22,7 @@ set(SOURCE_FILE
     src/Renderer/SpriteManip.hpp
     src/Renderer/SpriteManip.cpp
     src/Renderer/Renderer.cpp
+    src/Renderer/Stage.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp
     src/Clock/Clock.cpp
@@ -46,8 +47,6 @@ target_link_libraries(
 target_include_directories(RendererLib 
     PUBLIC
         include
-    PRIVATE
-        src
 )
 
 find_package(nlohmann_json REQUIRED)
