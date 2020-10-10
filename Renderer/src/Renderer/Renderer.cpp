@@ -1,4 +1,5 @@
 #include "Renderer.hpp"
+#include "SpriteManip.hpp"
 #include <filesystem>
 #include <iostream>
 
@@ -20,11 +21,9 @@ void Renderer::initBG()
     fs::path BGpath(_map->getMapDirectory());
     BGpath /= _map->getBGFilename();
     _mapBG.loadFromFile(BGpath.generic_string());
-    auto [x, y] = _mapBG.getSize();
     _mapBG_sprite.setTexture(_mapBG);
-    _mapBG_sprite.setOrigin(x / 2, y / 2);
-    float BGscale = _height / static_cast<float>(y);
-    _mapBG_sprite.setScale(BGscale, BGscale);
+    setOrigin(_mapBG_sprite, HorizPos::CENTER, VertPos::CENTER);
+    scaleHeight(_mapBG_sprite, _height);
     _mapBG_sprite.setPosition(_width / 2, _height / 2);
 }
 

@@ -19,6 +19,8 @@ set(INCLUDE_FILE
     include/Skin.hpp
 )
 set(SOURCE_FILE
+    src/Renderer/SpriteManip.hpp
+    src/Renderer/SpriteManip.cpp
     src/Renderer/Renderer.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp
