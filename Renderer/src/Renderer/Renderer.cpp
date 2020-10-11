@@ -28,8 +28,13 @@ void Renderer::initBG()
     BGpath /= _map->getBGFilename();
     _mapBG.loadFromFile(BGpath.generic_string());
     _mapBG_sprite.setTexture(_mapBG);
+    float width_ratio = static_cast<float>(_width) / _mapBG.getSize().x;
+    float height_ratio = static_cast<float>(_height) / _mapBG.getSize().y;
+    if (width_ratio > height_ratio)
+        scaleWidth(_mapBG_sprite, _width);
+    else
+        scaleHeight(_mapBG_sprite, _height);
     setOrigin(_mapBG_sprite, HorizPos::CENTER, VertPos::CENTER);
-    scaleHeight(_mapBG_sprite, _height);
     _mapBG_sprite.setPosition(_width / 2, _height / 2);
 }
 
