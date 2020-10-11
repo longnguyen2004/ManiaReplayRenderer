@@ -1,6 +1,7 @@
 #include <cctype>
 #include <chrono>
 #include <iostream>
+#include <ratio>
 
 #ifdef _WIN32
 #include <locale> // for UTF-8 trickery
@@ -17,6 +18,8 @@
 using namespace std::chrono;
 using json = nlohmann::json;
 
+using double_ms = std::chrono::duration<double, std::milli>;
+
 int main(int argc, char const *argv[])
 {
 #ifdef _WIN32
@@ -24,38 +27,28 @@ int main(int argc, char const *argv[])
     std::locale::global(std::locale(".65001"));
 #endif
 
-    std::string mapFile(
-        "G:/osu test/Jun Kuroda + AAAA - Ultimate Fate (Kawawa) "
-        "[The Apocalypse].osu");
+    std::string mapFile("G:/osu test/Akasha/xi - Akasha (luyuja) [8K FEVER].osu");
     std::cout << "[Main] Loading map file " << mapFile << '\n';
     Map testMap(mapFile);
     std::string skinFolder(
         "C:/Users/nghuu/AppData/Local/osu!/Skins/R Skin v3.0 (Bars)");
     Skin testSkin(skinFolder);
-    std::cout << "[Main] Skin name: ";
+
     std::cout << "[Main] Creating window with resolution 854x480\n";
-    sf::RenderWindow window(sf::VideoMode(854, 480), "Test");
-    Clock clock(0.0);
-    Renderer renderer(&window, &testMap, &clock);
+    sf::RenderWindow window(
+        sf::VideoMode(1280, 720), "Test", sf::Style::Titlebar | sf::Style::Close);
+    Clock clock(60.0);
+    Renderer renderer(&window, &testMap, &testSkin, &clock);
     sf::Event event;
+    double totalFrameTime = 0.0;
     auto start = steady_clock::now();
-    std::size_t elapsed_time = 0;
     clock.setEpoch();
     while (window.isOpen())
     {
-        if (renderer.drawNextFrame())
+        bool drawFrame = renderer.drawNextFrame();
+        if (drawFrame)
         {
             window.display();
-            auto end = steady_clock::now();
-            elapsed_time =
-                duration_cast<milliseconds>(end - start).count();
-        }
-        if (clock.getElapsedTime() % 250 == 0)
-        {
-            double fps = clock.getFrameCount() * 1000.0 / elapsed_time;
-            std::cout << "\r               ";
-            std::cout << "\r"
-                      << "FPS: " << fps;
         }
         while (window.pollEvent(event))
         {
@@ -63,6 +56,18 @@ int main(int argc, char const *argv[])
                 window.close();
         }
         clock.tick(true);
+        if (drawFrame)
+        {
+            auto end = steady_clock::now();
+            totalFrameTime += double_ms(end - start).count();
+            start = end;
+        }
+        if (clock.getElapsedTime() % 250 == 0)
+        {
+            std::cout << "\r               "
+                      << "\rFPS:"
+                      << 1000.0 * renderer.getFrameCount() / totalFrameTime;
+        }
     }
     std::cout << '\n';
     char input;
