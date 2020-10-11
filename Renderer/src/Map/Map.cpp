@@ -7,7 +7,6 @@
 #include <sstream>
 
 #include "../ANSIEscape/Color.hpp"
-#include "../InputFacet/InputFacet.hpp"
 
 namespace fs = std::filesystem;
 
