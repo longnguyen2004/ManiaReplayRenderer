@@ -23,6 +23,7 @@ set(SOURCE_FILE
     src/Renderer/SpriteManip.cpp
     src/Renderer/Renderer.cpp
     src/Renderer/Stage.cpp
+    src/Renderer/Column.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp
     src/Clock/Clock.cpp

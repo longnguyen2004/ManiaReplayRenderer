@@ -29,17 +29,19 @@ void Renderer::Stage::createColumns()
     _stageStart = std::stoi(maniaSettings["ColumnStart"]);
     _stageEnd = _stageStart;
     auto columnWidthStr = maniaSettings["ColumnWidth"];
+    auto columnLineWidthStr = maniaSettings["ColumnLineWidth"];
     std::replace(columnWidthStr.begin(), columnWidthStr.end(), ',', ' ');
-    std::istringstream is(columnWidthStr);
+    std::replace(columnLineWidthStr.begin(), columnLineWidthStr.end(), ',', ' ');
+    std::istringstream is1(columnWidthStr);
+    std::istringstream is2(columnLineWidthStr);
+    int temp;
+    is2 >> temp; // ignore the first number for now
     for (unsigned int i = 0; i < _keys; ++i)
     {
-        unsigned int width;
-        is >> width;
-        sf::RectangleShape column(
-            {width * _ren->_scalingFactor, static_cast<float>(_ren->_height)});
-        column.setPosition(_stageEnd * _ren->_scalingFactor, 0);
-        column.setFillColor(sf::Color::Black);
-        _columns.push_back(std::move(column));
+        unsigned int width, lineWidth;
+        is1 >> width;
+        is2 >> lineWidth;
+        _columns.emplace_back(_ren, _stageEnd, width, lineWidth);
         _stageEnd += width;
     }
 }
@@ -47,7 +49,7 @@ void Renderer::Stage::createColumns()
 void Renderer::Stage::drawColumns()
 {
     for (auto &i : _columns)
-        _ren->_target->draw(i);
+        i.draw();
 }
 
 void Renderer::Stage::loadStageLeftRightHint()

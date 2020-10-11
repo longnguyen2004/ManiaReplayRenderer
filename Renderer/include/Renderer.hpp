@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <list>
 #include <memory>
+#include <vector>
 
 #include "Clock.hpp"
 #include "Map.hpp"
@@ -46,8 +47,10 @@ public:
     void drawNextFrame();
 
 private:
+    class Column;
+
     Renderer *_ren;
-    std::list<sf::RectangleShape> _columns;
+    std::vector<Column> _columns;
     unsigned int _stageStart, _stageEnd, _hitPos;
     unsigned int _keys;
     sf::Texture _stageLeft, _stageRight, _stageHint;
@@ -58,4 +61,18 @@ private:
     void drawStageLeftRightHint();
 };
 
+class Renderer::Stage::Column
+{
+public:
+    Column(Renderer *ren,
+        float columnStart,
+        float columnWidth,
+        float columnLineWidth = 0.0f);
+    void draw();
+
+private:
+    Renderer *_ren;
+    float _columnStart, _columnWidth, _columnLineWidth;
+    sf::RectangleShape _columnRect, _columnLine;
+};
 #endif
