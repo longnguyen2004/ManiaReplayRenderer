@@ -34,9 +34,12 @@ int main(int argc, char const *argv[])
         "C:/Users/nghuu/AppData/Local/osu!/Skins/R Skin v3.0 (Bars)");
     Skin testSkin(skinFolder);
 
-    std::cout << "[Main] Creating window with resolution 854x480\n";
-    sf::RenderWindow window(
-        sf::VideoMode(1280, 720), "Test", sf::Style::Titlebar | sf::Style::Close);
+    unsigned int width = 1280;
+    unsigned int height = 720;
+    std::cout << "[Main] Creating window with resolution " << width << 'x' << height
+              << '\n';
+    sf::RenderWindow window(sf::VideoMode(width, height), "Test",
+        sf::Style::Titlebar | sf::Style::Close);
     Clock clock(60.0);
     Renderer renderer(&window, &testMap, &testSkin, &clock);
     sf::Event event;
