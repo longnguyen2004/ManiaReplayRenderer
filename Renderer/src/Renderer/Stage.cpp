@@ -1,3 +1,4 @@
+#include "../InputFacet/InputFacet.hpp"
 #include "Renderer.hpp"
 #include "SpriteManip.hpp"
 #include <algorithm>
@@ -30,10 +31,10 @@ void Renderer::Stage::createColumns()
     _stageEnd = _stageStart;
     auto columnWidthStr = maniaSettings["ColumnWidth"];
     auto columnLineWidthStr = maniaSettings["ColumnLineWidth"];
-    std::replace(columnWidthStr.begin(), columnWidthStr.end(), ',', ' ');
-    std::replace(columnLineWidthStr.begin(), columnLineWidthStr.end(), ',', ' ');
     std::istringstream is1(columnWidthStr);
     std::istringstream is2(columnLineWidthStr);
+    is1.imbue(std::locale(std::locale::classic(), new CommaAsSeparator()));
+    is2.imbue(std::locale(std::locale::classic(), new CommaAsSeparator()));
     int temp;
     is2 >> temp; // ignore the first number for now
     for (unsigned int i = 0; i < _keys; ++i)
