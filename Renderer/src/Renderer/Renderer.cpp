@@ -1,5 +1,6 @@
 #include "Renderer.hpp"
 #include "SpriteManip.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 
@@ -30,10 +31,8 @@ void Renderer::initBG()
     _mapBG_sprite.setTexture(_mapBG);
     float width_ratio = static_cast<float>(_width) / _mapBG.getSize().x;
     float height_ratio = static_cast<float>(_height) / _mapBG.getSize().y;
-    if (width_ratio > height_ratio)
-        scaleWidth(_mapBG_sprite, _width);
-    else
-        scaleHeight(_mapBG_sprite, _height);
+    float scale_ratio = std::max(width_ratio, height_ratio);
+    _mapBG_sprite.setScale(scale_ratio, scale_ratio);
     setOrigin(_mapBG_sprite, HorizPos::CENTER, VertPos::CENTER);
     _mapBG_sprite.setPosition(_width / 2, _height / 2);
 }
