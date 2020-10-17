@@ -29,6 +29,7 @@ set(SOURCE_FILE
     src/Clock/Clock.cpp
     src/Skin/Skin.cpp
     src/ANSIEscape/Color.cpp
+    src/InputFacet/CommaAsSeparator.cpp
 )
 
 add_library(
