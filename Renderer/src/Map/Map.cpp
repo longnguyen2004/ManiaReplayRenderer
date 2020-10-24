@@ -59,6 +59,8 @@ void Map::loadFromInputStream(std::istream &stream)
 
     stream.ignore(4); // 0,0,
     stream >> std::quoted(_BGname);
+
+    loadTimingPoints(stream);
 }
 
 const std::string &Map::getMapDirectory() const { return _parentDir; }
@@ -70,3 +72,40 @@ const Settings &Map::getMetadata() const { return _metadata; }
 const Settings &Map::getDifficultySettings() const { return _difficulty; }
 
 const std::string &Map::getBGFilename() const { return _BGname; }
+
+void Map::loadTimingPoints(std::istream &stream)
+{
+    std::cout << "[Map::TimingPoint] Loading timing points\n";
+    std::string s;
+    do
+    {
+        std::getline(stream, s);
+    } while (stream && s != "[TimingPoints]");
+    std::uint64_t maxDuration = 0;
+    TimingPoint prevTimingPoint;
+    bool firstEncountered = false;
+    while (stream && stream.peek() != '[')
+    {
+        std::getline(stream, s);
+        if (!s.empty())
+        {
+            _timingPoints.emplace_back(s);
+            if (auto last = _timingPoints.back(); last.isUninherited())
+            {
+                if (!firstEncountered)
+                {
+                    firstEncountered = true;
+                    _baseBPM = last.getBPM().value();
+                }
+                else if (std::uint64_t duration =
+                             last.getOffset() - prevTimingPoint.getOffset();
+                         duration > maxDuration)
+                {
+                    maxDuration = duration;
+                    _baseBPM = prevTimingPoint.getBPM().value();
+                }
+                prevTimingPoint = last;
+            }
+        }
+    }
+}
