@@ -1,0 +1,12 @@
+#ifndef RENDERERLIB_DATATYPE_SAMPLESET
+#define RENDERERLIB_DATATYPE_SAMPLESET
+
+enum class SampleSet
+{
+    DEFAULT,
+    NORMAL,
+    SOFT,
+    DRUM
+};
+
+#endif

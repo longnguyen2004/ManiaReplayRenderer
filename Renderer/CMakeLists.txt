@@ -17,6 +17,8 @@ set(INCLUDE_FILE
     include/Settings.hpp
     include/Clock.hpp
     include/Skin.hpp
+    include/DataType/SampleSet.hpp
+    include/DataType/TimingPoint.hpp
 )
 set(SOURCE_FILE
     src/Renderer/SpriteManip.hpp
@@ -30,6 +32,7 @@ set(SOURCE_FILE
     src/Skin/Skin.cpp
     src/ANSIEscape/Color.cpp
     src/InputFacet/CommaAsSeparator.cpp
+    src/DataType/TimingPoint.cpp
 )
 
 add_library(
@@ -49,6 +52,7 @@ target_link_libraries(
 target_include_directories(RendererLib 
     PUBLIC
         include
+        include/DataType
 )
 
 find_package(nlohmann_json REQUIRED)
