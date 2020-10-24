@@ -34,9 +34,16 @@ unsigned int TimingPoint::getSampleIndex() const { return _sampleIndex; }
 bool TimingPoint::isUninherited() const { return _uninherited; }
 bool TimingPoint::isKiai() const
 {
-    return _effects & static_cast<std::uint8_t>(BitmaskEnum::KIAI);
+    return _effects & static_cast<std::uint16_t>(BitmaskEnum::KIAI);
 }
 bool TimingPoint::isOmitBarline() const
 {
-    return _effects & static_cast<std::uint8_t>(BitmaskEnum::OMIT_BARLINE);
+    return _effects & static_cast<std::uint16_t>(BitmaskEnum::OMIT_BARLINE);
+}
+
+bool TimingPointCompOffset(const TimingPoint &lhs, const TimingPoint &rhs)
+{
+    // Always put red lines before green lines
+    return lhs._offset < rhs._offset ||
+           lhs._offset == rhs._offset && lhs._uninherited && !rhs._uninherited;
 }

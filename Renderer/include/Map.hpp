@@ -1,8 +1,9 @@
 #ifndef RENDERERLIB_MAP_HPP
 #define RENDERERLIB_MAP_HPP
 
-#include <list>
+#include <fstream>
 #include <memory>
+#include <set>
 #include <string>
 
 #include "DataType/TimingPoint.hpp"
@@ -18,7 +19,6 @@
  *
  * Load functions:
  * loadFromOsuFile(const std::string&) : load from file, called by ctor
- * loadFromInputStream(std::istream&)  : load from stream, called by ctor
  *
  * Getter:
  * const std::string &getMapDirectory()
@@ -26,20 +26,20 @@
  * Settings getGeneralSettings()
  * Settings getMetadata()
  * Settings getDifficultySettings()
- * const std::list<TimingPoint> &getTimingPoints()
+ * const TimingPointSet &getTimingPoints()
  * double getBaseBPM()
  */
 
 class RENDERERLIB_EXPORT Map
 {
 public:
+    using TimingPointSet = std::set<TimingPoint, decltype(&TimingPointCompOffset)>;
+
     Map();
     explicit Map(const std::string &pathToOsuFile);
-    explicit Map(std::istream &stream);
     ~Map() = default;
 
     void loadFromOsuFile(const std::string &pathToOsuFile);
-    void loadFromInputStream(std::istream &stream);
 
     const std::string &getMapDirectory() const;
     const std::string &getBGFilename() const;
@@ -48,16 +48,18 @@ public:
     const Settings &getMetadata() const;
     const Settings &getDifficultySettings() const;
 
-    const std::list<TimingPoint> &getTimingPoints() const;
+    const TimingPointSet &getTimingPoints() const;
     double getBaseBPM() const;
 
 private:
+    std::ifstream _filestream;
     Settings _general, _metadata, _difficulty;
     std::string _parentDir, _BGname;
-    std::list<TimingPoint> _timingPoints;
+    TimingPointSet _timingPoints;
     double _baseBPM;
 
-    void loadTimingPoints(std::istream &stream);
+    void loadSettings();
+    void loadTimingPoints();
 };
 
 #endif

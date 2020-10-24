@@ -1,6 +1,5 @@
 #include "Map.hpp"
 #include <filesystem>
-#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <locale>
@@ -10,29 +9,32 @@
 
 namespace fs = std::filesystem;
 
-Map::Map() {}
+Map::Map() :
+    _general("[General]"),
+    _metadata("[Metadata]"),
+    _difficulty("[Difficulty]"),
+    _timingPoints(&TimingPointCompOffset)
+{
+}
 
 Map::Map(const std::string &pathToOsuFile) :
-    _general("[General]"), _metadata("[Metadata]"), _difficulty("[Difficulty]")
+    _general("[General]"),
+    _metadata("[Metadata]"),
+    _difficulty("[Difficulty]"),
+    _timingPoints(&TimingPointCompOffset)
 {
     loadFromOsuFile(pathToOsuFile);
 }
 
-Map::Map(std::istream &stream) :
-    _general("[General]"), _metadata("[Metadata]"), _difficulty("[Difficulty]")
-{
-    loadFromInputStream(stream);
-}
-
 void Map::loadFromOsuFile(const std::string &pathToOsuFile)
 {
-    fs::path mapPath = fs::u8path(pathToOsuFile);
-    if (fs::exists(mapPath))
+    if (fs::path mapPath = fs::u8path(pathToOsuFile); fs::exists(mapPath))
     {
         _parentDir = mapPath.parent_path().generic_string();
         std::cout << "[Map] Opening file " << pathToOsuFile << '\n';
-        std::ifstream stream(pathToOsuFile);
-        loadFromInputStream(stream);
+        _filestream.open(mapPath);
+        loadSettings();
+        loadTimingPoints();
     }
     else
     {
@@ -41,26 +43,24 @@ void Map::loadFromOsuFile(const std::string &pathToOsuFile)
     }
 }
 
-void Map::loadFromInputStream(std::istream &stream)
+void Map::loadSettings()
 {
-    std::cout << "[Map] Loading from stream\n";
+    std::cout << "[Map::Settings] Loading settings\n";
     std::cout << "[Map::Settings] Loading general settings\n";
-    _general.loadFromInputStream(stream);
+    _general.loadFromInputStream(_filestream);
     std::cout << "[Map::Settings] Loading metadata\n";
-    _metadata.loadFromInputStream(stream);
+    _metadata.loadFromInputStream(_filestream);
     std::cout << "[Map::Settings] Loading difficulty settings\n";
-    _difficulty.loadFromInputStream(stream);
+    _difficulty.loadFromInputStream(_filestream);
 
     std::string s;
     do
     {
-        std::getline(stream, s);
+        std::getline(_filestream, s);
     } while (s != "//Background and Video events"); // pretty ugly but meh
 
-    stream.ignore(4); // 0,0,
-    stream >> std::quoted(_BGname);
-
-    loadTimingPoints(stream);
+    _filestream.ignore(4); // 0,0,
+    _filestream >> std::quoted(_BGname);
 }
 
 const std::string &Map::getMapDirectory() const { return _parentDir; }
@@ -73,24 +73,27 @@ const Settings &Map::getDifficultySettings() const { return _difficulty; }
 
 const std::string &Map::getBGFilename() const { return _BGname; }
 
-void Map::loadTimingPoints(std::istream &stream)
+const Map::TimingPointSet &Map::getTimingPoints() const { return _timingPoints; }
+
+double Map::getBaseBPM() const { return _baseBPM; }
+
+void Map::loadTimingPoints()
 {
     std::cout << "[Map::TimingPoint] Loading timing points\n";
     std::string s;
     do
     {
-        std::getline(stream, s);
-    } while (stream && s != "[TimingPoints]");
+        std::getline(_filestream, s);
+    } while (_filestream && s != "[TimingPoints]");
     std::uint64_t maxDuration = 0;
     TimingPoint prevTimingPoint;
     bool firstEncountered = false;
-    while (stream && stream.peek() != '[')
+    while (_filestream && _filestream.peek() != '[')
     {
-        std::getline(stream, s);
+        std::getline(_filestream, s);
         if (!s.empty())
         {
-            _timingPoints.emplace_back(s);
-            if (auto last = _timingPoints.back(); last.isUninherited())
+            if (auto last = *_timingPoints.emplace(s).first; last.isUninherited())
             {
                 if (!firstEncountered)
                 {

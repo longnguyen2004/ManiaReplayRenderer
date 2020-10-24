@@ -22,6 +22,9 @@ public:
     bool isKiai() const;
     bool isOmitBarline() const;
 
+    friend bool TimingPointCompOffset(
+        const TimingPoint &lhs, const TimingPoint &rhs);
+
 private:
     enum class BitmaskEnum
     {
