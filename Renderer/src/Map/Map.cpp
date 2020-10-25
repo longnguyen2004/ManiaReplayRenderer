@@ -13,7 +13,8 @@ Map::Map() :
     _general("[General]"),
     _metadata("[Metadata]"),
     _difficulty("[Difficulty]"),
-    _timingPoints(&TimingPointCompOffset)
+    _uninheritedPoints(&TimingPointCompOffset),
+    _inheritedPoints(&TimingPointCompOffset)
 {
 }
 
@@ -21,7 +22,8 @@ Map::Map(const std::string &pathToOsuFile) :
     _general("[General]"),
     _metadata("[Metadata]"),
     _difficulty("[Difficulty]"),
-    _timingPoints(&TimingPointCompOffset)
+    _uninheritedPoints(&TimingPointCompOffset),
+    _inheritedPoints(&TimingPointCompOffset)
 {
     loadFromOsuFile(pathToOsuFile);
 }
@@ -73,12 +75,22 @@ const Settings &Map::getDifficultySettings() const { return _difficulty; }
 
 const std::string &Map::getBGFilename() const { return _BGname; }
 
-const Map::TimingPointSet &Map::getTimingPoints() const { return _timingPoints; }
+const Map::TimingPointSet &Map::getUninheritedTimingPoints() const
+{
+    return _uninheritedPoints;
+}
+
+const Map::TimingPointSet &Map::getInheritedTimingPoints() const
+{
+    return _inheritedPoints;
+}
 
 double Map::getBaseBPM() const { return _baseBPM; }
 
 void Map::loadTimingPoints()
 {
+    _uninheritedPoints.clear();
+    _inheritedPoints.clear();
     std::cout << "[Map::TimingPoint] Loading timing points\n";
     std::string s;
     do
@@ -93,8 +105,10 @@ void Map::loadTimingPoints()
         std::getline(_filestream, s);
         if (!s.empty())
         {
-            if (auto last = *_timingPoints.emplace(s).first; last.isUninherited())
+            TimingPoint last(s);
+            if (last.isUninherited())
             {
+                _uninheritedPoints.insert(last);
                 if (!firstEncountered)
                 {
                     firstEncountered = true;
@@ -108,6 +122,10 @@ void Map::loadTimingPoints()
                     _baseBPM = prevTimingPoint.getBPM().value();
                 }
                 prevTimingPoint = last;
+            }
+            else
+            {
+                _inheritedPoints.insert(last);
             }
         }
     }

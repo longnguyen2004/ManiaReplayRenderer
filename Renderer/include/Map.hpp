@@ -48,14 +48,16 @@ public:
     const Settings &getMetadata() const;
     const Settings &getDifficultySettings() const;
 
-    const TimingPointSet &getTimingPoints() const;
+    const TimingPointSet &getUninheritedTimingPoints() const;
+    const TimingPointSet &getInheritedTimingPoints() const;
     double getBaseBPM() const;
 
 private:
     std::ifstream _filestream;
     Settings _general, _metadata, _difficulty;
     std::string _parentDir, _BGname;
-    TimingPointSet _timingPoints;
+    TimingPointSet _uninheritedPoints;
+    TimingPointSet _inheritedPoints;
     double _baseBPM;
 
     void loadSettings();
