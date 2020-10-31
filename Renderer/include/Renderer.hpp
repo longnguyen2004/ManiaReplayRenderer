@@ -16,8 +16,12 @@
 class RENDERERLIB_EXPORT Renderer
 {
 public:
-    Renderer(sf::RenderTarget *target, Map *map, Skin *skin, Clock *clock);
-    bool drawNextFrame();
+    Renderer(sf::RenderTarget *target,
+        Clock *clock,
+        Map *map,
+        Skin *skin,
+        double scrollSpeed);
+    bool updateState();
     std::size_t getFrameCount() const;
     ~Renderer() = default;
 
@@ -26,6 +30,7 @@ private:
     unsigned int _width, _height;
     float _scalingFactor;
     std::size_t _frameCount;
+    double _scrollSpeed;
 
     Clock *_clock;
     Map *_map;
@@ -44,7 +49,7 @@ class Renderer::Stage
 {
 public:
     Stage(Renderer *ren);
-    void drawNextFrame();
+    void draw();
 
 private:
     class Column;

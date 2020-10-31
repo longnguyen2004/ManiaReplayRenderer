@@ -16,7 +16,7 @@ Renderer::Stage::Stage(Renderer *ren) : _ren(ren)
     loadStageLeftRightHint();
 }
 
-void Renderer::Stage::drawNextFrame()
+void Renderer::Stage::draw()
 {
     drawColumns();
     drawStageLeftRightHint();

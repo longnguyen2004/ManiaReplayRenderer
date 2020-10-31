@@ -37,13 +37,13 @@ void Renderer::initBG()
     _mapBG_sprite.setPosition(_width / 2, _height / 2);
 }
 
-bool Renderer::drawNextFrame()
+bool Renderer::updateState()
 {
     if (_clock->nextFrame())
     {
         _target->clear();
         _target->draw(_mapBG_sprite);
-        _stage->drawNextFrame();
+        _stage->draw();
         ++_frameCount;
         return true;
     }
