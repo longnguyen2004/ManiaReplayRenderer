@@ -29,6 +29,7 @@ std::optional<double> TimingPoint::getSV() const
     return !_uninherited ? -100 / _beatLength : std::optional<double>{};
 }
 
+unsigned int TimingPoint::getMeter() const { return _meter; }
 SampleSet TimingPoint::getSampleSet() const { return _sampleSet; }
 unsigned int TimingPoint::getSampleIndex() const { return _sampleIndex; }
 bool TimingPoint::isUninherited() const { return _uninherited; }

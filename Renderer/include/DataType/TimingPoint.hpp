@@ -15,6 +15,7 @@ public:
     std::uint64_t getOffset() const;
     std::optional<double> getBPM() const;
     std::optional<double> getSV() const;
+    unsigned int getMeter() const;
     SampleSet getSampleSet() const;
     unsigned int getSampleIndex() const;
     unsigned int getVolume() const;
