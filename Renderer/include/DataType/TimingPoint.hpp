@@ -12,7 +12,7 @@ public:
     TimingPoint();
     TimingPoint(const std::string &data); // read-only for now
     ~TimingPoint() = default;
-    std::uint64_t getOffset() const;
+    std::int64_t getOffset() const;
     std::optional<double> getBPM() const;
     std::optional<double> getSV() const;
     unsigned int getMeter() const;
@@ -32,7 +32,7 @@ private:
         KIAI = 1,
         OMIT_BARLINE = 1 << 2
     };
-    std::uint64_t _offset;
+    std::int64_t _offset;
     double _beatLength;
     unsigned int _meter;
     SampleSet _sampleSet;

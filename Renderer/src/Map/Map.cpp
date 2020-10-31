@@ -97,7 +97,7 @@ void Map::loadTimingPoints()
     {
         std::getline(_filestream, s);
     } while (_filestream && s != "[TimingPoints]");
-    std::uint64_t maxDuration = 0;
+    std::int64_t maxDuration = 0;
     TimingPoint prevTimingPoint;
     bool firstEncountered = false;
     while (_filestream && _filestream.peek() != '[')
@@ -114,7 +114,7 @@ void Map::loadTimingPoints()
                     firstEncountered = true;
                     _baseBPM = last.getBPM().value();
                 }
-                else if (std::uint64_t duration =
+                else if (std::int64_t duration =
                              last.getOffset() - prevTimingPoint.getOffset();
                          duration > maxDuration)
                 {

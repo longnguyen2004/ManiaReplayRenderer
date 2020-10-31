@@ -17,7 +17,7 @@ TimingPoint::TimingPoint(const std::string &data)
     is >> _volume >> _uninherited >> _effects;
 }
 
-std::uint64_t TimingPoint::getOffset() const { return _offset; }
+std::int64_t TimingPoint::getOffset() const { return _offset; }
 
 std::optional<double> TimingPoint::getBPM() const
 {

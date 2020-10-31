@@ -10,7 +10,7 @@ void PositionCalculator::preCalculate(
     const Map::TimingPointSet &uninherited, const Map::TimingPointSet &inherited)
 {
     std::cout << "[PositionCalculator] Precalculating positions\n";
-    std::size_t prevOffset = 0;
+    std::int64_t prevOffset = 0;
     double prevPosition = 0.0;
     auto it_uninherited = uninherited.cbegin();
     auto it_inherited = inherited.cbegin();
@@ -19,7 +19,7 @@ void PositionCalculator::preCalculate(
     double vel = it_uninherited->getBPM().value() / _baseBPM;
     do
     {
-        std::size_t offset = it_uninherited->getOffset();
+        std::int64_t offset = it_uninherited->getOffset();
         double globalSpeed = it_uninherited->getBPM().value() / _baseBPM;
         double position = prevPosition + 0.035 * (offset - prevOffset) * vel;
         _stateMap[offset] = {position, globalSpeed};
