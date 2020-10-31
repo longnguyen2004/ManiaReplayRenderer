@@ -6,7 +6,11 @@
 
 namespace fs = std::filesystem;
 
-Renderer::Renderer(sf::RenderTarget *target, Map *map, Skin *skin, Clock *clock) :
+Renderer::Renderer(sf::RenderTarget *target,
+    Clock *clock,
+    Map *map,
+    Skin *skin,
+    double scrollSpeed) :
     _target(target),
     _clock(clock),
     _frameCount(0),
@@ -20,6 +24,7 @@ Renderer::Renderer(sf::RenderTarget *target, Map *map, Skin *skin, Clock *clock)
     std::cout << "[Renderer] Resolution: " << _width << 'x' << _height << '\n';
     initBG();
     _stage = std::make_unique<Stage>(this);
+    _positionCalc = std::make_unique<PositionCalculator>(_map);
 }
 
 void Renderer::initBG()

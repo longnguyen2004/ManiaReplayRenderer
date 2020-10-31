@@ -11,6 +11,7 @@
 
 #include "Clock.hpp"
 #include "Map.hpp"
+#include "PositionCalculator.hpp"
 #include "Skin.hpp"
 
 class RENDERERLIB_EXPORT Renderer
@@ -42,6 +43,7 @@ private:
     class Stage;
 
     std::unique_ptr<Stage> _stage;
+    std::unique_ptr<PositionCalculator> _positionCalc;
     void initBG();
 };
 

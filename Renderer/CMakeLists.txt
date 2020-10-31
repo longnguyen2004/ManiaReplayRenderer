@@ -13,6 +13,7 @@ find_package(SFML COMPONENTS graphics audio REQUIRED)
 set(INCLUDE_FILE
     include/Export.hpp
     include/Renderer.hpp
+    include/PositionCalculator.hpp
     include/Map.hpp
     include/Settings.hpp
     include/Clock.hpp
@@ -26,6 +27,7 @@ set(SOURCE_FILE
     src/Renderer/Renderer.cpp
     src/Renderer/Stage.cpp
     src/Renderer/Column.cpp
+    src/Renderer/PositionCalculator.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp
     src/Clock/Clock.cpp
