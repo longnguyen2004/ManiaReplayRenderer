@@ -1,9 +1,24 @@
 #include "PositionCalculator.hpp"
 #include <iostream>
 
-PositionCalculator::PositionCalculator(Map *map) : _baseBPM(map->getBaseBPM())
+PositionCalculator::PositionCalculator(Map *map) :
+    _baseBPM(map->getBaseBPM()), _currentOffset(0)
 {
     preCalculate(map->getUninheritedTimingPoints(), map->getInheritedTimingPoints());
+    _it_stateMap = std::next(_stateMap.cbegin());
+}
+
+double PositionCalculator::getPosition(std::int64_t offset) const
+{
+    auto [start_offset, state] = *std::prev(_stateMap.upper_bound(offset));
+    return state._position + 0.035 * (offset - start_offset) * state._velocity;
+}
+
+void PositionCalculator::updateInternalState(std::int64_t newOffset)
+{
+    double delta = getPosition(newOffset) - getPosition(_currentOffset);
+    for (auto &[offset, state] : _stateMap)
+        state._position -= delta;
 }
 
 void PositionCalculator::preCalculate(
