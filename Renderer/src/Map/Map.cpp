@@ -1,4 +1,5 @@
 #include "Map.hpp"
+#include <cmath>
 #include <filesystem>
 #include <iomanip>
 #include <iostream>
@@ -40,6 +41,7 @@ void Map::loadFromOsuFile(const std::string &pathToOsuFile)
         loadSettings();
         loadTimingPoints();
         loadObjects();
+        _leadIn = std::min(0LL, _objects.cbegin()->getStartTime());
     }
     else
     {
@@ -153,3 +155,5 @@ const Map::TimingPointSet &Map::getInheritedTimingPoints() const
 const Map::ObjectSet &Map::getObjects() const { return _objects; }
 
 double Map::getBaseBPM() const { return _baseBPM; }
+
+std::int64_t Map::getLeadIn() const { return _leadIn; }

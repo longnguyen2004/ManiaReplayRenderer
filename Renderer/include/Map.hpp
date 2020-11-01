@@ -54,6 +54,7 @@ public:
     const TimingPointSet &getInheritedTimingPoints() const;
     const ObjectSet &getObjects() const;
     double getBaseBPM() const;
+    std::int64_t getLeadIn() const;
 
 private:
     std::ifstream _filestream;
@@ -63,6 +64,7 @@ private:
     TimingPointSet _inheritedPoints;
     ObjectSet _objects;
     double _baseBPM;
+    std::int64_t _leadIn;
 
     void loadSettings();
     void loadTimingPoints();
