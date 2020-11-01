@@ -27,12 +27,17 @@ int main(int argc, char const *argv[])
     std::locale::global(std::locale(".65001"));
 #endif
 
-    std::string mapFile("G:/osu test/Akasha/xi - Akasha (luyuja) [8K FEVER].osu");
-    std::cout << "[Main] Loading map file " << mapFile << '\n';
+    std::string mapFile(
+        "G:/osu test/Proluvies/Camellia - Proluvies (TheToaphster) [SVecial].osu");
     Map testMap(mapFile);
+    std::cout << "[Main] Map information: \n";
+    std::cout << "[Main] Title: " << testMap.getMetadata()["Title"] << '\n';
+    std::cout << "[Main] Artist: " << testMap.getMetadata()["Artist"] << '\n';
+    std::cout << "[Main] Base BPM: " << testMap.getBaseBPM() << '\n';
     std::string skinFolder(
         "C:/Users/nghuu/AppData/Local/osu!/Skins/R Skin v3.0 (Bars)");
     Skin testSkin(skinFolder);
+    double scrollSpeed = 30.0;
 
     unsigned int width = 1280;
     unsigned int height = 720;
@@ -40,15 +45,15 @@ int main(int argc, char const *argv[])
               << '\n';
     sf::RenderWindow window(sf::VideoMode(width, height), "Test",
         sf::Style::Titlebar | sf::Style::Close);
-    Clock clock(60.0);
-    Renderer renderer(&window, &testMap, &testSkin, &clock);
+    Clock clock(60.0, testMap.getLeadIn());
+    Renderer renderer(&window, &clock, &testMap, &testSkin, scrollSpeed);
     sf::Event event;
     double totalFrameTime = 0.0;
     auto start = steady_clock::now();
     clock.setEpoch();
     while (window.isOpen())
     {
-        bool drawFrame = renderer.drawNextFrame();
+        bool drawFrame = renderer.updateState();
         if (drawFrame)
         {
             window.display();
