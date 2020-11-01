@@ -35,7 +35,8 @@ void PositionCalculator::preCalculate(const Map::TimingPointSet &uninherited,
     double prevPosition = 0.0;
     auto it_uninherited = uninherited.cbegin();
     auto it_inherited = inherited.cbegin();
-    while (it_inherited->getOffset() < it_uninherited->getOffset())
+    while (!inherited.empty() &&
+           it_inherited->getOffset() < it_uninherited->getOffset())
         ++it_inherited;
     double vel = it_uninherited->getBPM().value() / _baseBPM;
     do
