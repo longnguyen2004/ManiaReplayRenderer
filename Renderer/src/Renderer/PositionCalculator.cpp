@@ -1,31 +1,37 @@
 #include "PositionCalculator.hpp"
 #include <iostream>
 
-PositionCalculator::PositionCalculator(Map *map) :
-    _baseBPM(map->getBaseBPM()), _currentOffset(0)
+using VelocityStateMap = PositionCalculator::VelocityStateMap;
+
+PositionCalculator::PositionCalculator(Map *map, std::int64_t startOffset) :
+    _baseBPM(map->getBaseBPM())
 {
-    preCalculate(map->getUninheritedTimingPoints(), map->getInheritedTimingPoints());
-    _it_stateMap = std::next(_stateMap.cbegin());
+    preCalculate(map->getUninheritedTimingPoints(), map->getInheritedTimingPoints(),
+        startOffset);
+    auto firstVel = _stateMap.begin()->second._velocity;
+    _stateMap[startOffset] = {0.0, firstVel};
 }
 
 double PositionCalculator::getPosition(std::int64_t offset) const
 {
-    auto [start_offset, state] = *std::prev(_stateMap.upper_bound(offset));
-    return state._position + 0.035 * (offset - start_offset) * state._velocity;
+    auto [startOffset, state] = *std::prev(_stateMap.upper_bound(offset));
+    return state._position + 0.035 * (offset - startOffset) * state._velocity;
 }
 
-void PositionCalculator::updateInternalState(std::int64_t newOffset)
+void PositionCalculator::updateInternalState(double distancePassed)
 {
-    double delta = getPosition(newOffset) - getPosition(_currentOffset);
     for (auto &[offset, state] : _stateMap)
-        state._position -= delta;
+        state._position -= distancePassed;
 }
 
-void PositionCalculator::preCalculate(
-    const Map::TimingPointSet &uninherited, const Map::TimingPointSet &inherited)
+const VelocityStateMap &PositionCalculator::getStateMap() const { return _stateMap; }
+
+void PositionCalculator::preCalculate(const Map::TimingPointSet &uninherited,
+    const Map::TimingPointSet &inherited,
+    std::int64_t startOffset)
 {
     std::cout << "[PositionCalculator] Precalculating positions\n";
-    std::int64_t prevOffset = 0;
+    std::int64_t prevOffset = startOffset;
     double prevPosition = 0.0;
     auto it_uninherited = uninherited.cbegin();
     auto it_inherited = inherited.cbegin();
