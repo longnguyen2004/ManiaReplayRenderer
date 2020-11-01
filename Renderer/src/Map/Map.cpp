@@ -14,7 +14,8 @@ Map::Map() :
     _metadata("[Metadata]"),
     _difficulty("[Difficulty]"),
     _uninheritedPoints(&TimingPointCompOffset),
-    _inheritedPoints(&TimingPointCompOffset)
+    _inheritedPoints(&TimingPointCompOffset),
+    _objects(&ObjectCompOffset)
 {
 }
 
@@ -23,7 +24,8 @@ Map::Map(const std::string &pathToOsuFile) :
     _metadata("[Metadata]"),
     _difficulty("[Difficulty]"),
     _uninheritedPoints(&TimingPointCompOffset),
-    _inheritedPoints(&TimingPointCompOffset)
+    _inheritedPoints(&TimingPointCompOffset),
+    _objects(&ObjectCompOffset)
 {
     loadFromOsuFile(pathToOsuFile);
 }
@@ -37,6 +39,7 @@ void Map::loadFromOsuFile(const std::string &pathToOsuFile)
         _filestream.open(mapPath);
         loadSettings();
         loadTimingPoints();
+        loadObjects();
     }
     else
     {
@@ -64,28 +67,6 @@ void Map::loadSettings()
     _filestream.ignore(4); // 0,0,
     _filestream >> std::quoted(_BGname);
 }
-
-const std::string &Map::getMapDirectory() const { return _parentDir; }
-
-const Settings &Map::getGeneralSetings() const { return _general; }
-
-const Settings &Map::getMetadata() const { return _metadata; }
-
-const Settings &Map::getDifficultySettings() const { return _difficulty; }
-
-const std::string &Map::getBGFilename() const { return _BGname; }
-
-const Map::TimingPointSet &Map::getUninheritedTimingPoints() const
-{
-    return _uninheritedPoints;
-}
-
-const Map::TimingPointSet &Map::getInheritedTimingPoints() const
-{
-    return _inheritedPoints;
-}
-
-double Map::getBaseBPM() const { return _baseBPM; }
 
 void Map::loadTimingPoints()
 {
@@ -130,3 +111,45 @@ void Map::loadTimingPoints()
         }
     }
 }
+
+void Map::loadObjects()
+{
+    _objects.clear();
+    unsigned int columnCount = std::stoi(_difficulty["CircleSize"]);
+    std::cout << "[Map::Object] Loading objects\n";
+    std::string s;
+    do
+    {
+        std::getline(_filestream, s);
+    } while (_filestream && s != "[HitObjects]");
+    while (_filestream && _filestream.peek() != '[')
+    {
+        std::getline(_filestream, s);
+        if (!s.empty())
+            _objects.emplace(s, columnCount);
+    }
+}
+
+const std::string &Map::getMapDirectory() const { return _parentDir; }
+
+const Settings &Map::getGeneralSetings() const { return _general; }
+
+const Settings &Map::getMetadata() const { return _metadata; }
+
+const Settings &Map::getDifficultySettings() const { return _difficulty; }
+
+const std::string &Map::getBGFilename() const { return _BGname; }
+
+const Map::TimingPointSet &Map::getUninheritedTimingPoints() const
+{
+    return _uninheritedPoints;
+}
+
+const Map::TimingPointSet &Map::getInheritedTimingPoints() const
+{
+    return _inheritedPoints;
+}
+
+const Map::ObjectSet &Map::getObjects() const { return _objects; }
+
+double Map::getBaseBPM() const { return _baseBPM; }

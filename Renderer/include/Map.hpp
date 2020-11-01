@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 
+#include "DataType/Object.hpp"
 #include "DataType/TimingPoint.hpp"
 #include "Settings.hpp"
 
@@ -34,6 +35,7 @@ class RENDERERLIB_EXPORT Map
 {
 public:
     using TimingPointSet = std::set<TimingPoint, decltype(&TimingPointCompOffset)>;
+    using ObjectSet = std::multiset<Object, decltype(&ObjectCompOffset)>;
 
     Map();
     explicit Map(const std::string &pathToOsuFile);
@@ -50,6 +52,7 @@ public:
 
     const TimingPointSet &getUninheritedTimingPoints() const;
     const TimingPointSet &getInheritedTimingPoints() const;
+    const ObjectSet &getObjects() const;
     double getBaseBPM() const;
 
 private:
@@ -58,10 +61,12 @@ private:
     std::string _parentDir, _BGname;
     TimingPointSet _uninheritedPoints;
     TimingPointSet _inheritedPoints;
+    ObjectSet _objects;
     double _baseBPM;
 
     void loadSettings();
     void loadTimingPoints();
+    void loadObjects();
 };
 
 #endif

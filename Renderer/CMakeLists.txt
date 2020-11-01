@@ -20,6 +20,7 @@ set(INCLUDE_FILE
     include/Skin.hpp
     include/DataType/SampleSet.hpp
     include/DataType/TimingPoint.hpp
+    include/DataType/Object.hpp
 )
 set(SOURCE_FILE
     src/Renderer/SpriteManip.hpp
@@ -35,6 +36,7 @@ set(SOURCE_FILE
     src/ANSIEscape/Color.cpp
     src/InputFacet/CommaAsSeparator.cpp
     src/DataType/TimingPoint.cpp
+    src/DataType/Object.cpp
 )
 
 add_library(
