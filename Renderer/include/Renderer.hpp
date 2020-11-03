@@ -51,10 +51,14 @@ class Renderer::Stage
 {
 public:
     Stage(Renderer *ren);
+    void update();
     void draw();
 
 private:
     class Column;
+    class BarlineDrawer;
+
+    using VelocityIt = PositionCalculator::VelocityStateMap::const_iterator;
 
     Renderer *_ren;
     std::vector<Column> _columns;
@@ -62,6 +66,11 @@ private:
     unsigned int _keys;
     sf::Texture _stageLeft, _stageRight, _stageHint;
     sf::Sprite _stageLeft_sprite, _stageRight_sprite, _stageHint_sprite;
+    double _currentVel;
+    VelocityIt _nextVel, _endVel;
+
+    std::unique_ptr<BarlineDrawer> _barlineDrawer;
+
     void createColumns();
     void drawColumns();
     void loadStageLeftRightHint();
@@ -81,5 +90,27 @@ private:
     Renderer *_ren;
     float _columnStart, _columnWidth, _columnLineWidth;
     sf::RectangleShape _columnRect, _columnLine;
+};
+
+class Renderer::Stage::BarlineDrawer
+{
+public:
+    BarlineDrawer(Renderer *ren,
+        double hitPos,
+        unsigned int stageStart,
+        unsigned int stageEnd);
+    void update();
+    void draw();
+
+private:
+    Renderer *_ren;
+    double _hitPos;
+    unsigned int _stageStart, _stageEnd;
+    double _currentOffset;
+    double _currentBPM;
+    unsigned int _currentMeter;
+    std::list<sf::RectangleShape> _barlines;
+    std::list<sf::RectangleShape>::iterator _barlineBegin;
+    Map::TimingPointSet::const_iterator _itUninherited, _itEnd;
 };
 #endif

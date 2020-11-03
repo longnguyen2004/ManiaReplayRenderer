@@ -28,6 +28,7 @@ set(SOURCE_FILE
     src/Renderer/Renderer.cpp
     src/Renderer/Stage.cpp
     src/Renderer/Column.cpp
+    src/Renderer/BarlineDrawer.cpp
     src/Renderer/PositionCalculator.cpp
     src/Map/Map.cpp
     src/Settings/Settings.cpp

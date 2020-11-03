@@ -8,18 +8,38 @@
 #include <sstream>
 #include <string>
 
-Renderer::Stage::Stage(Renderer *ren) : _ren(ren)
+Renderer::Stage::Stage(Renderer *ren) :
+    _ren(ren),
+    _nextVel(_ren->_positionCalc->getStateMap().cbegin()),
+    _endVel(_ren->_positionCalc->getStateMap().cend())
 {
     _keys = std::stoi(_ren->_map->getDifficultySettings()["CircleSize"]);
     _hitPos = std::stoi(_ren->_skin->getManiaSettings(_keys)["HitPosition"]);
     createColumns();
     loadStageLeftRightHint();
+    _currentVel = _nextVel->second._velocity;
+    ++_nextVel;
+    _barlineDrawer =
+        std::make_unique<BarlineDrawer>(_ren, _hitPos, _stageStart, _stageEnd);
+}
+
+void Renderer::Stage::update()
+{
+    if (_nextVel != _endVel && _ren->_clock->getCurrentTime() == _nextVel->first)
+    {
+        _currentVel = _nextVel->second._velocity;
+        ++_nextVel;
+    }
+    _ren->_positionCalc->updateInternalState(
+        0.035 * _currentVel * _ren->_scrollSpeed);
+    _barlineDrawer->update();
 }
 
 void Renderer::Stage::draw()
 {
     drawColumns();
     drawStageLeftRightHint();
+    _barlineDrawer->draw();
 }
 
 void Renderer::Stage::createColumns()
