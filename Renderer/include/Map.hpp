@@ -55,6 +55,7 @@ public:
     const ObjectSet &getObjects() const;
     double getBaseBPM() const;
     std::int64_t getLeadIn() const;
+    std::int64_t getEndOffset() const;
 
 private:
     std::ifstream _filestream;
@@ -65,6 +66,7 @@ private:
     ObjectSet _objects;
     double _baseBPM;
     std::int64_t _leadIn;
+    std::int64_t _endOffset;
 
     void loadSettings();
     void loadTimingPoints();

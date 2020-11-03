@@ -16,7 +16,8 @@ Map::Map() :
     _difficulty("[Difficulty]"),
     _uninheritedPoints(&TimingPointCompOffset),
     _inheritedPoints(&TimingPointCompOffset),
-    _objects(&ObjectCompOffset)
+    _objects(&ObjectCompOffset),
+    _endOffset(0)
 {
 }
 
@@ -26,7 +27,8 @@ Map::Map(const std::string &pathToOsuFile) :
     _difficulty("[Difficulty]"),
     _uninheritedPoints(&TimingPointCompOffset),
     _inheritedPoints(&TimingPointCompOffset),
-    _objects(&ObjectCompOffset)
+    _objects(&ObjectCompOffset),
+    _endOffset(0)
 {
     loadFromOsuFile(pathToOsuFile);
 }
@@ -41,7 +43,7 @@ void Map::loadFromOsuFile(const std::string &pathToOsuFile)
         loadSettings();
         loadTimingPoints();
         loadObjects();
-        _leadIn = std::min(0LL, _objects.cbegin()->getStartTime());
+        _leadIn = std::min(0LL, _objects.cbegin()->getStartTime() - 2000);
     }
     else
     {
@@ -127,8 +129,13 @@ void Map::loadObjects()
     while (_filestream && _filestream.peek() != '[')
     {
         std::getline(_filestream, s);
+        ObjectSet::const_iterator pos;
         if (!s.empty())
-            _objects.emplace(s, columnCount);
+            pos = _objects.emplace(s, columnCount);
+        if (pos->isLN())
+            _endOffset = pos->getEndTime();
+        else
+            _endOffset = pos->getStartTime();
     }
 }
 
@@ -157,3 +164,5 @@ const Map::ObjectSet &Map::getObjects() const { return _objects; }
 double Map::getBaseBPM() const { return _baseBPM; }
 
 std::int64_t Map::getLeadIn() const { return _leadIn; }
+
+std::int64_t Map::getEndOffset() const { return _endOffset; }
