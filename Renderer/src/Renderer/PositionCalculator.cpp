@@ -3,8 +3,9 @@
 
 using VelocityStateMap = PositionCalculator::VelocityStateMap;
 
-PositionCalculator::PositionCalculator(Map *map, std::int64_t startOffset) :
-    _baseBPM(map->getBaseBPM())
+PositionCalculator::PositionCalculator(
+    Map *map, std::int64_t startOffset, double scrollSpeed) :
+    _baseBPM(map->getBaseBPM()), _scrollSpeed(scrollSpeed)
 {
     preCalculate(map->getUninheritedTimingPoints(), map->getInheritedTimingPoints(),
         startOffset);
@@ -15,7 +16,8 @@ PositionCalculator::PositionCalculator(Map *map, std::int64_t startOffset) :
 double PositionCalculator::getPosition(std::int64_t offset) const
 {
     auto [startOffset, state] = *std::prev(_stateMap.upper_bound(offset));
-    return state._position + 0.035 * (offset - startOffset) * state._velocity;
+    return state._position +
+           0.035 * (offset - startOffset) * state._velocity * _scrollSpeed;
 }
 
 void PositionCalculator::updateInternalState(double distancePassed)
@@ -42,19 +44,22 @@ void PositionCalculator::preCalculate(const Map::TimingPointSet &uninherited,
     do
     {
         std::int64_t offset = it_uninherited->getOffset();
-        double globalSpeed = it_uninherited->getBPM().value() / _baseBPM;
-        double position = prevPosition + 0.035 * (offset - prevOffset) * vel;
-        _stateMap[offset] = {position, globalSpeed};
+        double baseVel = it_uninherited->getBPM().value() / _baseBPM;
+        double position =
+            prevPosition + 0.035 * (offset - prevOffset) * vel * _scrollSpeed;
+        _stateMap[offset] = {position, baseVel};
         prevOffset = offset;
         prevPosition = position;
         ++it_uninherited;
+        vel = baseVel;
         while (it_inherited != inherited.cend() &&
                (it_uninherited == uninherited.cend() ||
                    it_inherited->getOffset() < it_uninherited->getOffset()))
         {
             offset = it_inherited->getOffset();
-            vel = globalSpeed * it_inherited->getSV().value();
-            position = prevPosition + 0.035 * (offset - prevOffset) * vel;
+            position =
+                prevPosition + 0.035 * (offset - prevOffset) * vel * _scrollSpeed;
+            vel = baseVel * it_inherited->getSV().value();
             _stateMap[offset] = {position, vel};
             prevOffset = offset;
             prevPosition = position;

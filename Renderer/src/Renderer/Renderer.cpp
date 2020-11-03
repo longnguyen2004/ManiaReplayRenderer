@@ -18,13 +18,15 @@ Renderer::Renderer(sf::RenderTarget *target,
     _height(_target->getSize().y),
     _scalingFactor(_height / 480.0f),
     _map(map),
-    _skin(skin)
+    _skin(skin),
+    _scrollSpeed(scrollSpeed)
 {
     std::cout << "[Renderer] Renderer settings:\n";
     std::cout << "[Renderer] Resolution: " << _width << 'x' << _height << '\n';
     initBG();
+    _positionCalc =
+        std::make_unique<PositionCalculator>(_map, _map->getLeadIn(), _scrollSpeed);
     _stage = std::make_unique<Stage>(this);
-    _positionCalc = std::make_unique<PositionCalculator>(_map);
 }
 
 void Renderer::initBG()
@@ -44,6 +46,7 @@ void Renderer::initBG()
 
 bool Renderer::updateState()
 {
+    _stage->update();
     if (_clock->nextFrame())
     {
         _target->clear();
