@@ -27,7 +27,7 @@ set(SOURCE_FILE
     src/Renderer/SpriteManip.cpp
     src/Renderer/Renderer.cpp
     src/Renderer/Stage.cpp
-    src/Renderer/Column.cpp
+    src/Renderer/ColumnDrawer.cpp
     src/Renderer/BarlineDrawer.cpp
     src/Renderer/PositionCalculator.cpp
     src/Map/Map.cpp

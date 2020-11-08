@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <list>
 #include <memory>
+#include <utility>
 #include <vector>
 
 #include "Clock.hpp"
@@ -55,13 +56,12 @@ public:
     void draw();
 
 private:
-    class Column;
+    class ColumnDrawer;
     class BarlineDrawer;
 
     using VelocityIt = PositionCalculator::VelocityStateMap::const_iterator;
 
     Renderer *_ren;
-    std::vector<Column> _columns;
     unsigned int _stageStart, _stageEnd, _hitPos;
     unsigned int _keys;
     sf::Texture _stageLeft, _stageRight, _stageHint;
@@ -69,27 +69,25 @@ private:
     double _currentVel;
     VelocityIt _nextVel, _endVel;
 
+    std::unique_ptr<ColumnDrawer> _columnDrawer;
     std::unique_ptr<BarlineDrawer> _barlineDrawer;
 
-    void createColumns();
-    void drawColumns();
     void loadStageLeftRightHint();
     void drawStageLeftRightHint();
 };
 
-class Renderer::Stage::Column
+class Renderer::Stage::ColumnDrawer
 {
 public:
-    Column(Renderer *ren,
-        float columnStart,
-        float columnWidth,
-        float columnLineWidth = 0.0f);
+    ColumnDrawer(Renderer *ren, unsigned int keys);
     void draw();
+    std::pair<unsigned int, unsigned int> getStageBound() const;
 
 private:
     Renderer *_ren;
-    float _columnStart, _columnWidth, _columnLineWidth;
-    sf::RectangleShape _columnRect, _columnLine;
+    std::vector<sf::RectangleShape> _columns;
+    std::list<sf::RectangleShape> _columnLines;
+    unsigned int _stageStart, _stageEnd;
 };
 
 class Renderer::Stage::BarlineDrawer

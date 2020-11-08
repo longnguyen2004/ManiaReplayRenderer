@@ -15,12 +15,14 @@ Renderer::Stage::Stage(Renderer *ren) :
 {
     _keys = std::stoi(_ren->_map->getDifficultySettings()["CircleSize"]);
     _hitPos = std::stoi(_ren->_skin->getManiaSettings(_keys)["HitPosition"]);
-    createColumns();
-    loadStageLeftRightHint();
     _currentVel = _nextVel->second._velocity;
     ++_nextVel;
+    _columnDrawer = std::make_unique<ColumnDrawer>(_ren, _keys);
+    _stageStart = _columnDrawer->getStageBound().first;
+    _stageEnd = _columnDrawer->getStageBound().second;
     _barlineDrawer =
         std::make_unique<BarlineDrawer>(_ren, _hitPos, _stageStart, _stageEnd);
+    loadStageLeftRightHint();
 }
 
 void Renderer::Stage::update()
@@ -37,40 +39,9 @@ void Renderer::Stage::update()
 
 void Renderer::Stage::draw()
 {
-    drawColumns();
-    drawStageLeftRightHint();
+    _columnDrawer->draw();
     _barlineDrawer->draw();
-}
-
-void Renderer::Stage::createColumns()
-{
-    std::cout << "[Renderer::Stage] Creating columns\n";
-    _columns.clear();
-    auto maniaSettings = _ren->_skin->getManiaSettings(_keys);
-    _stageStart = std::stoi(maniaSettings["ColumnStart"]);
-    _stageEnd = _stageStart;
-    auto columnWidthStr = maniaSettings["ColumnWidth"];
-    auto columnLineWidthStr = maniaSettings["ColumnLineWidth"];
-    std::istringstream is1(columnWidthStr);
-    std::istringstream is2(columnLineWidthStr);
-    is1.imbue(std::locale(std::locale::classic(), new CommaAsSeparator()));
-    is2.imbue(std::locale(std::locale::classic(), new CommaAsSeparator()));
-    int temp;
-    is2 >> temp; // ignore the first number for now
-    for (unsigned int i = 0; i < _keys; ++i)
-    {
-        unsigned int width, lineWidth;
-        is1 >> width;
-        is2 >> lineWidth;
-        _columns.emplace_back(_ren, _stageEnd, width, lineWidth);
-        _stageEnd += width;
-    }
-}
-
-void Renderer::Stage::drawColumns()
-{
-    for (auto &i : _columns)
-        i.draw();
+    drawStageLeftRightHint();
 }
 
 void Renderer::Stage::loadStageLeftRightHint()
