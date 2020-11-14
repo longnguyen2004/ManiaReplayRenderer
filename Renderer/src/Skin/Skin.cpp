@@ -68,20 +68,20 @@ void Skin::loadSkinSettings(const std::string &pathToSkinIni)
     _fonts.loadFromInputStream(skinIni);
     while (skinIni)
     {
-        _maniaSettings.emplace_back(skinIni, "[Mania]");
-        std::cout << "[Skin::Mania] Loaded settings for "
-                  << _maniaSettings.back()["Keys"] << "k\n";
+        Settings currentSetting(skinIni, "[Mania]");
+        unsigned int keys = std::stoi(currentSetting["Keys"]);
+        std::cout << "[Skin::Mania] Loaded settings for " << keys << "k\n";
+        _maniaSettings[keys] = std::move(currentSetting);
     }
 }
 
 const Settings &Skin::getGeneralSettings() const { return _general; }
 const Settings &Skin::getColorSettings() const { return _colors; }
 const Settings &Skin::getFontSettings() const { return _fonts; }
-const Settings &Skin::getManiaSettings(int keys) const
+const Settings &Skin::getManiaSettings(unsigned int keys) const
 {
-    if (auto it = std::find_if(_maniaSettings.begin(), _maniaSettings.end(),
-            [keys](const Settings &a) { return keys == std::stoi(a["Keys"]); });
-        it != _maniaSettings.end())
-        return *it;
-    else return {};
+    if (auto it = _maniaSettings.find(keys); it != _maniaSettings.end())
+        return it->second;
+    else
+        return {};
 }

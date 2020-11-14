@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <list>
 #include <string>
+#include <unordered_map>
 
 namespace fs = std::filesystem;
 
@@ -24,11 +25,11 @@ public:
     const Settings &getColorSettings() const;
     const Settings &getFontSettings() const;
 
-    const Settings &getManiaSettings(int keys) const;
+    const Settings &getManiaSettings(unsigned int keys) const;
 
 private:
     Settings _general, _colors, _fonts;
-    std::list<Settings> _maniaSettings;
+    std::unordered_map<unsigned int, Settings> _maniaSettings;
     fs::path _skinFolder;
     void loadSkinSettings(const std::string &pathToSkinIni);
 };
