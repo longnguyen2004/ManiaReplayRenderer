@@ -39,14 +39,50 @@ void Skin::load(const std::string &pathToSkinFolder)
 
 fs::path Skin::getSkinFolder() const { return _skinFolder; }
 
-fs::path Skin::getPathToElement(const std::string &name) const
+fs::path Skin::getPathToElement(
+    const std::string &name, const std::string &suffix, unsigned int keys) const
 {
-    static std::list<std::string> exts{".png"s, ".jpg"s};
+    static std::list<std::string> exts{".png", ".jpg"};
     static std::list<std::string> res{"@2x", ""};
+    static std::unordered_map<std::string, std::string>
+        elementNameTosettingName // Mappings from file names to skin.ini settings
+        {
+            // clang-format off
+            // Keys and notes
+            { "mania-key" , "KeyImage"  },
+            { "mania-note", "NoteImage" },
+
+            // Stage elements
+            { "mania-stage-left"  , "StageLeft"   },
+            { "mania-stage-right" , "StageRight"  },
+            { "mania-stage-bottom", "StageBottom" },
+            { "mania-stage-hint"  , "StageHint"   },
+            { "mania-stage-light" , "StageLight"  },
+
+            // Lighting
+            { "lighting", "Lighting" },
+
+            // Hit images
+            { "mania-hit", "Hit" }
+            // clang-format on
+        };
+    std::string baseName;
+    if (!keys)
+    {
+        if (auto it = elementNameTosettingName.find(name + suffix);
+            it != elementNameTosettingName.end())
+        {
+            baseName = getManiaSettings(keys)[it->second];
+        }
+    }
+    if (baseName.empty())
+    {
+        baseName = name + suffix;
+    }
     for (auto &i : res)
         for (auto &ext : exts)
         {
-            std::string file_name(name + i + ext);
+            std::string file_name(baseName + i + ext);
             fs::path elem_path(_skinFolder);
             elem_path /= file_name;
             if (fs::exists(elem_path))

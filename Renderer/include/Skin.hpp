@@ -19,7 +19,9 @@ public:
 
     void load(const std::string &pathToSkinFolder);
     fs::path getSkinFolder() const;
-    fs::path getPathToElement(const std::string &name) const;
+    fs::path getPathToElement(const std::string &name,
+        const std::string &suffix = "",
+        unsigned int keys = 0) const;
 
     const Settings &getGeneralSettings() const;
     const Settings &getColorSettings() const;
