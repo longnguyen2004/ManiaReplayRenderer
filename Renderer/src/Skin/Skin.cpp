@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <vector>
 
 #include "../ANSIEscape/Color.hpp"
 
@@ -39,11 +40,25 @@ void Skin::load(const std::string &pathToSkinFolder)
 
 fs::path Skin::getSkinFolder() const { return _skinFolder; }
 
-fs::path Skin::getPathToElement(
-    const std::string &name, const std::string &suffix, unsigned int keys) const
+fs::path Skin::getPathToElement(const std::string &name) const
 {
     static std::list<std::string> exts{".png", ".jpg"};
     static std::list<std::string> res{"@2x", ""};
+    for (auto &i : res)
+        for (auto &ext : exts)
+        {
+            std::string file_name(name + i + ext);
+            fs::path elem_path(_skinFolder);
+            elem_path /= file_name;
+            if (fs::exists(elem_path))
+                return elem_path;
+        }
+    return {};
+}
+
+fs::path Skin::getPathToManiaElement(
+    unsigned int keys, const std::string &name, const std::string &suffix) const
+{
     static std::unordered_map<std::string, std::string>
         elementNameTosettingName // Mappings from file names to skin.ini settings
         {
@@ -67,28 +82,38 @@ fs::path Skin::getPathToElement(
             // clang-format on
         };
     std::string baseName;
-    if (!keys)
+    if (auto it = elementNameTosettingName.find(name);
+        it != elementNameTosettingName.end())
     {
-        if (auto it = elementNameTosettingName.find(name + suffix);
-            it != elementNameTosettingName.end())
-        {
-            baseName = getManiaSettings(keys)[it->second];
-        }
+        baseName = getManiaSettings(keys)[it->second + suffix];
     }
     if (baseName.empty())
     {
-        baseName = name + suffix;
-    }
-    for (auto &i : res)
-        for (auto &ext : exts)
+        if (name == "mania-key" || name == "mania-note")
         {
-            std::string file_name(baseName + i + ext);
-            fs::path elem_path(_skinFolder);
-            elem_path /= file_name;
-            if (fs::exists(elem_path))
-                return elem_path;
+            static std::vector<std::vector<char>> keyIndextoImage{
+                // clang-format off
+                {                     'S'                     },
+                { '1',                                    '1' },
+                { '1',                'S',                '1' },
+                { '1', '2',                          '2', '1' },
+                { '1', '2',           'S',           '2', '1' },
+                { '1', '2', '1',                '1', '2', '1' },
+                { '1', '2', '1',      'S',      '1', '2', '1' },
+                { '1', '2', '1', '2',      '2', '1', '2', '1' },
+                { '1', '2', '1', '2', 'S', '2', '1', '2', '1' },
+                // clang-format on
+            };
+            auto suffix_new = suffix;
+            suffix_new.front() = keyIndextoImage[keys][suffix.front() - '0'];
+            baseName = name + suffix_new;
         }
-    return {};
+        else
+        {
+            baseName = name + suffix;
+        }
+    }
+    return getPathToElement(baseName);
 }
 
 void Skin::loadSkinSettings(const std::string &pathToSkinIni)

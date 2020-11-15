@@ -48,7 +48,7 @@ void Renderer::Stage::loadStageLeftRightHint()
 {
     std::cout << "[Renderer::Stage] Loading stage left\n";
     auto stageLeft_path =
-        _ren->_skin->getPathToElement("mania-stage-left", "", _keys)
+        _ren->_skin->getPathToManiaElement(_keys, "mania-stage-left")
             .generic_string();
     _stageLeft.loadFromFile(stageLeft_path);
     _stageLeft_sprite.setTexture(_stageLeft);
@@ -58,7 +58,7 @@ void Renderer::Stage::loadStageLeftRightHint()
 
     std::cout << "[Renderer::Stage] Loading stage right\n";
     auto stageRight_path =
-        _ren->_skin->getPathToElement("mania-stage-right", "", _keys)
+        _ren->_skin->getPathToManiaElement(_keys, "mania-stage-right")
             .generic_string();
     _stageRight.loadFromFile(stageRight_path);
     _stageRight_sprite.setTexture(_stageRight);
@@ -68,7 +68,7 @@ void Renderer::Stage::loadStageLeftRightHint()
 
     std::cout << "[Renderer::Stage] Loading stage hint\n";
     auto stageHint_path =
-        _ren->_skin->getPathToElement("mania-stage-hint", "", _keys)
+        _ren->_skin->getPathToManiaElement(_keys, "mania-stage-hint")
             .generic_string();
     _stageHint.loadFromFile(stageHint_path);
     _stageHint_sprite.setTexture(_stageHint);
