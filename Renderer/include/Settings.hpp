@@ -36,7 +36,7 @@ public:
     void loadFromFile(const std::string &pathToFile);
     void loadFromInputStream(std::istream &stream);
 
-    const std::string &operator[](const std::string &s) const;
+    std::string operator[](const std::string &s) const;
 
 private:
     /* Slight rant:

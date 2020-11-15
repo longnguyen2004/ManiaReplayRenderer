@@ -55,7 +55,7 @@ void Settings::loadFromInputStream(std::istream &stream)
     }
 }
 
-const std::string &Settings::operator[](const std::string &s) const
+std::string Settings::operator[](const std::string &s) const
 {
     if (auto it = _valueMap.find(s); it != _valueMap.end())
         return it->second;
