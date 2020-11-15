@@ -82,6 +82,7 @@ class Renderer::Stage::ColumnDrawer
 public:
     ColumnDrawer(Renderer *ren, unsigned int keys);
     void draw();
+    float getSmallestColumnWidth() const;
     std::pair<float, float> getColumnBound(unsigned int col) const;
     std::pair<float, float> getStageBound() const;
 
@@ -89,7 +90,7 @@ private:
     Renderer *_ren;
     std::vector<sf::RectangleShape> _columns;
     std::list<sf::RectangleShape> _columnLines;
-    float _stageStart, _stageEnd;
+    float _stageStart, _stageEnd, _smallestCol;
 };
 
 class Renderer::Stage::BarlineDrawer

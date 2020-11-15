@@ -4,7 +4,7 @@
 #include <sstream>
 
 Renderer::Stage::ColumnDrawer::ColumnDrawer(Renderer *ren, unsigned int keys) :
-    _ren(ren)
+    _ren(ren), _smallestCol(std::numeric_limits<float>::max())
 {
     std::cout << "[Renderer::Stage::ColumnDrawer] Loading columns\n";
     const auto &maniaSettings = _ren->_skin->getManiaSettings(keys);
@@ -30,6 +30,7 @@ Renderer::Stage::ColumnDrawer::ColumnDrawer(Renderer *ren, unsigned int keys) :
         columnLine.setPosition(_stageEnd * _ren->_scalingFactor, 0);
         columnLine.setFillColor(sf::Color::White);
         _stageEnd += columnWidth;
+        _smallestCol = std::min(_smallestCol, columnWidth);
     }
     is2 >> columnLineWidth;
     auto &column = _columnLines.emplace_back(
@@ -48,6 +49,11 @@ void Renderer::Stage::ColumnDrawer::draw()
     {
         _ren->_target->draw(i);
     }
+}
+
+float Renderer::Stage::ColumnDrawer::getSmallestColumnWidth() const
+{
+    return _smallestCol;
 }
 
 std::pair<float, float> Renderer::Stage::ColumnDrawer::getColumnBound(
