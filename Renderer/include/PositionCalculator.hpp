@@ -10,14 +10,14 @@ class PositionCalculator
 public:
     struct State
     {
-        double _position; // in osu pixels
-        double _velocity; // in osu px / ms
+        float _position; // in osu pixels
+        float _velocity; // in osu px / ms
     };
     using VelocityStateMap = std::map<std::int64_t, State>;
-    PositionCalculator(Map *map, std::int64_t startOffset, double scrollSpeed);
+    PositionCalculator(Map *map, std::int64_t startOffset, float scrollSpeed);
     ~PositionCalculator() = default;
-    double getPosition(std::int64_t offset) const;
-    void updateInternalState(double distancePassed);
+    float getPosition(std::int64_t offset) const;
+    void updateInternalState(float distancePassed);
     const VelocityStateMap &getStateMap() const;
 
 private:
@@ -25,7 +25,8 @@ private:
         const Map::TimingPointSet &inherited,
         std::int64_t startOffset);
     VelocityStateMap _stateMap;
-    double _baseBPM, _scrollSpeed;
+    double _baseBPM;
+    float _scrollSpeed;
 };
 
 #endif

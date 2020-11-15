@@ -27,8 +27,7 @@ int main(int argc, char const *argv[])
     std::locale::global(std::locale(".65001"));
 #endif
 
-    std::string mapFile("G:/osu test/407153 LeaF - Doppelganger/LeaF - Doppelganger "
-                        "(Jinjin) [Zen's Insane].osu");
+    std::string mapFile("G:/osu test/Akasha/xi - Akasha (luyuja) [8K FEVER].osu");
     Map testMap(mapFile);
     std::cout << "[Main] Map information: \n";
     std::cout << "[Main] Title: " << testMap.getMetadata()["Title"] << '\n';
@@ -37,7 +36,7 @@ int main(int argc, char const *argv[])
     std::string skinFolder(
         "C:/Users/nghuu/AppData/Local/osu!/Skins/R Skin v3.0 (Bars)");
     Skin testSkin(skinFolder);
-    double scrollSpeed = 33.0;
+    float scrollSpeed = 33.0;
 
     unsigned int width = 1280;
     unsigned int height = 720;

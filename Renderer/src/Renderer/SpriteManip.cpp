@@ -36,18 +36,18 @@ void setOrigin(sf::Sprite &sprite, HorizPos horiz, VertPos vert)
     sprite.setOrigin(origin);
 }
 
-void scaleWidth(sf::Sprite &sprite, unsigned int width, bool preserveAspectRatio)
+void scaleWidth(sf::Sprite &sprite, float width, bool preserveAspectRatio)
 {
-    float factor = static_cast<float>(width) / sprite.getTextureRect().width;
+    float factor = width / sprite.getTextureRect().width;
     if (preserveAspectRatio)
         sprite.setScale(factor, factor);
     else
         sprite.setScale(factor, 1);
 }
 
-void scaleHeight(sf::Sprite &sprite, unsigned int height, bool preserveAspectRatio)
+void scaleHeight(sf::Sprite &sprite, float height, bool preserveAspectRatio)
 {
-    float factor = static_cast<float>(height) / sprite.getTextureRect().height;
+    float factor = height / sprite.getTextureRect().height;
     if (preserveAspectRatio)
         sprite.setScale(factor, factor);
     else

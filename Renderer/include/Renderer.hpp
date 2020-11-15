@@ -22,7 +22,7 @@ public:
         Clock *clock,
         Map *map,
         Skin *skin,
-        double scrollSpeed);
+        float scrollSpeed);
     bool updateState();
     std::size_t getFrameCount() const;
     ~Renderer() = default;
@@ -32,7 +32,7 @@ private:
     unsigned int _width, _height;
     float _scalingFactor;
     std::size_t _frameCount;
-    double _scrollSpeed;
+    float _scrollSpeed;
 
     Clock *_clock;
     Map *_map;
@@ -62,11 +62,12 @@ private:
     using VelocityIt = PositionCalculator::VelocityStateMap::const_iterator;
 
     Renderer *_ren;
-    unsigned int _stageStart, _stageEnd, _hitPos;
+    float _stageStart, _stageEnd;
+    float _hitPos;
     unsigned int _keys;
     sf::Texture _stageLeft, _stageRight, _stageHint;
     sf::Sprite _stageLeft_sprite, _stageRight_sprite, _stageHint_sprite;
-    double _currentVel;
+    float _currentVel;
     VelocityIt _nextVel, _endVel;
 
     std::unique_ptr<ColumnDrawer> _columnDrawer;
@@ -81,29 +82,27 @@ class Renderer::Stage::ColumnDrawer
 public:
     ColumnDrawer(Renderer *ren, unsigned int keys);
     void draw();
-    std::pair<unsigned int, unsigned int> getStageBound() const;
+    std::pair<float, float> getColumnBound(unsigned int col) const;
+    std::pair<float, float> getStageBound() const;
 
 private:
     Renderer *_ren;
     std::vector<sf::RectangleShape> _columns;
     std::list<sf::RectangleShape> _columnLines;
-    unsigned int _stageStart, _stageEnd;
+    float _stageStart, _stageEnd;
 };
 
 class Renderer::Stage::BarlineDrawer
 {
 public:
-    BarlineDrawer(Renderer *ren,
-        double hitPos,
-        unsigned int stageStart,
-        unsigned int stageEnd);
+    BarlineDrawer(Renderer *ren, float hitPos, float stageStart, float stageEnd);
     void update();
     void draw();
 
 private:
     Renderer *_ren;
-    double _hitPos;
-    unsigned int _stageStart, _stageEnd;
+    float _hitPos;
+    float _stageStart, _stageEnd;
     double _currentOffset;
     double _currentBPM;
     unsigned int _currentMeter;

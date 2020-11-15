@@ -4,7 +4,7 @@
 using VelocityStateMap = PositionCalculator::VelocityStateMap;
 
 PositionCalculator::PositionCalculator(
-    Map *map, std::int64_t startOffset, double scrollSpeed) :
+    Map *map, std::int64_t startOffset, float scrollSpeed) :
     _baseBPM(map->getBaseBPM()), _scrollSpeed(scrollSpeed)
 {
     preCalculate(map->getUninheritedTimingPoints(), map->getInheritedTimingPoints(),
@@ -13,14 +13,14 @@ PositionCalculator::PositionCalculator(
     _stateMap[startOffset] = {0.0, firstVel};
 }
 
-double PositionCalculator::getPosition(std::int64_t offset) const
+float PositionCalculator::getPosition(std::int64_t offset) const
 {
     auto [startOffset, state] = *std::prev(_stateMap.upper_bound(offset));
     return state._position +
            0.035 * (offset - startOffset) * state._velocity * _scrollSpeed;
 }
 
-void PositionCalculator::updateInternalState(double distancePassed)
+void PositionCalculator::updateInternalState(float distancePassed)
 {
     for (auto &[offset, state] : _stateMap)
         state._position -= distancePassed;
@@ -34,18 +34,18 @@ void PositionCalculator::preCalculate(const Map::TimingPointSet &uninherited,
 {
     std::cout << "[PositionCalculator] Precalculating positions\n";
     std::int64_t prevOffset = startOffset;
-    double prevPosition = 0.0;
+    float prevPosition = 0.0;
     auto it_uninherited = uninherited.cbegin();
     auto it_inherited = inherited.cbegin();
     while (!inherited.empty() &&
            it_inherited->getOffset() < it_uninherited->getOffset())
         ++it_inherited;
-    double vel = it_uninherited->getBPM().value() / _baseBPM;
+    float vel = it_uninherited->getBPM().value() / _baseBPM;
     do
     {
         std::int64_t offset = it_uninherited->getOffset();
-        double baseVel = it_uninherited->getBPM().value() / _baseBPM;
-        double position =
+        float baseVel = it_uninherited->getBPM().value() / _baseBPM;
+        float position =
             prevPosition + 0.035 * (offset - prevOffset) * vel * _scrollSpeed;
         _stateMap[offset] = {position, baseVel};
         prevOffset = offset;

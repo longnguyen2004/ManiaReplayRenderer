@@ -14,7 +14,7 @@ Renderer::Stage::Stage(Renderer *ren) :
     _endVel(_ren->_positionCalc->getStateMap().cend())
 {
     _keys = std::stoi(_ren->_map->getDifficultySettings()["CircleSize"]);
-    _hitPos = std::stoi(_ren->_skin->getManiaSettings(_keys)["HitPosition"]);
+    _hitPos = std::stof(_ren->_skin->getManiaSettings(_keys)["HitPosition"]);
     _currentVel = _nextVel->second._velocity;
     ++_nextVel;
     _columnDrawer = std::make_unique<ColumnDrawer>(_ren, _keys);

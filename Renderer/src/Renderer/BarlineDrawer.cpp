@@ -3,7 +3,7 @@
 #include <cmath>
 
 Renderer::Stage::BarlineDrawer::BarlineDrawer(
-    Renderer *ren, double hitPos, unsigned int stageStart, unsigned int stageEnd) :
+    Renderer *ren, float hitPos, float stageStart, float stageEnd) :
     _ren(ren),
     _itUninherited(_ren->_map->getUninheritedTimingPoints().cbegin()),
     _itEnd(_ren->_map->getUninheritedTimingPoints().cend()),
@@ -22,9 +22,9 @@ void Renderer::Stage::BarlineDrawer::update()
     unsigned int _stageWidth = _stageEnd - _stageStart;
     for (auto &i : _barlines)
     {
-        double y_new = i.getPosition().y + 0.035 * _ren->_stage->_currentVel *
-                                               _ren->_scrollSpeed *
-                                               _ren->_scalingFactor;
+        float y_new = i.getPosition().y + 0.035 * _ren->_stage->_currentVel *
+                                              _ren->_scrollSpeed *
+                                              _ren->_scalingFactor;
         i.setPosition(i.getPosition().x, y_new);
     }
     while (!_barlines.empty() && _barlines.front().getPosition().y > _ren->_height)
@@ -32,7 +32,7 @@ void Renderer::Stage::BarlineDrawer::update()
     while (_ren->_map->getEndOffset() > _currentOffset &&
            (_barlines.empty() || _barlines.back().getPosition().y > 0))
     {
-        double y =
+        float y =
             _hitPos - _ren->_positionCalc->getPosition(std::round(_currentOffset));
         auto &pos = _barlines.emplace_back(
             sf::Vector2f{_stageWidth * _ren->_scalingFactor, 2});

@@ -10,7 +10,7 @@ Renderer::Renderer(sf::RenderTarget *target,
     Clock *clock,
     Map *map,
     Skin *skin,
-    double scrollSpeed) :
+    float scrollSpeed) :
     _target(target),
     _clock(clock),
     _frameCount(0),

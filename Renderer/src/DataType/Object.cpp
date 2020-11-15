@@ -8,7 +8,7 @@ Object::Object(const std::string &data, unsigned int columnCount)
     std::istringstream is(data);
     is.imbue(std::locale(std::locale::classic(), new CommaAsSeparator));
     unsigned int type;
-    double x, y;
+    float x, y;
     is >> x >> y >> _startTime >> type; // we don't use y
     is >> reinterpret_cast<unsigned int &>(_hitSound);
     _column = std::floor(x * columnCount / 512);

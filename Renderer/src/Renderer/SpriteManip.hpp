@@ -20,9 +20,8 @@ enum class VertPos
 void setOrigin(sf::Sprite &sprite,
     HorizPos horiz = HorizPos::LEFT,
     VertPos vert = VertPos::TOP);
-void scaleWidth(
-    sf::Sprite &sprite, unsigned int newWidth, bool preserveAspectRatio = true);
+void scaleWidth(sf::Sprite &sprite, float newWidth, bool preserveAspectRatio = true);
 void scaleHeight(
-    sf::Sprite &sprite, unsigned int newHeight, bool preserveAspectRatio = true);
+    sf::Sprite &sprite, float newHeight, bool preserveAspectRatio = true);
 
 #endif

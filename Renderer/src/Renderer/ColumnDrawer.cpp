@@ -16,7 +16,7 @@ Renderer::Stage::ColumnDrawer::ColumnDrawer(Renderer *ren, unsigned int keys) :
     std::istringstream is2(columnLineWidthStr);
     is1.imbue(std::locale(std::locale::classic(), new CommaAsSeparator()));
     is2.imbue(std::locale(std::locale::classic(), new CommaAsSeparator()));
-    unsigned int columnWidth, columnLineWidth;
+    float columnWidth, columnLineWidth;
     for (unsigned int i = 0; i < keys; ++i)
     {
         is1 >> columnWidth;
@@ -50,8 +50,15 @@ void Renderer::Stage::ColumnDrawer::draw()
     }
 }
 
-std::pair<unsigned int, unsigned int>
-Renderer::Stage::ColumnDrawer::getStageBound() const
+std::pair<float, float> Renderer::Stage::ColumnDrawer::getColumnBound(
+    unsigned int col) const
+{
+    auto start = _columns[col].getPosition().x / _ren->_scalingFactor;
+    auto end = start + _columns[col].getSize().x / _ren->_scalingFactor;
+    return {start, end};
+}
+
+std::pair<float, float> Renderer::Stage::ColumnDrawer::getStageBound() const
 {
     return {_stageStart, _stageEnd};
 }
