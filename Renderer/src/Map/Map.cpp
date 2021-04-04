@@ -16,7 +16,8 @@ Map::Map() :
     _difficulty("[Difficulty]"),
     _uninheritedPoints(&TimingPointCompOffset),
     _inheritedPoints(&TimingPointCompOffset),
-    _objects(&ObjectCompOffset),
+    _notes(&ObjectCompOffset),
+    _LNs(&ObjectCompOffset),
     _endOffset(0)
 {
 }
@@ -27,7 +28,8 @@ Map::Map(const std::string &pathToOsuFile) :
     _difficulty("[Difficulty]"),
     _uninheritedPoints(&TimingPointCompOffset),
     _inheritedPoints(&TimingPointCompOffset),
-    _objects(&ObjectCompOffset),
+    _notes(&ObjectCompOffset),
+    _LNs(&ObjectCompOffset),
     _endOffset(0)
 {
     loadFromOsuFile(pathToOsuFile);
@@ -43,7 +45,8 @@ void Map::loadFromOsuFile(const std::string &pathToOsuFile)
         loadSettings();
         loadTimingPoints();
         loadObjects();
-        _leadIn = std::min(0LL, _objects.cbegin()->getStartTime() - 2000);
+        _leadIn = std::min({0LL, _notes.begin()->getStartTime() - 2000,
+            _LNs.begin()->getStartTime() - 2000});
     }
     else
     {
@@ -118,7 +121,8 @@ void Map::loadTimingPoints()
 
 void Map::loadObjects()
 {
-    _objects.clear();
+    _notes.clear();
+    _LNs.clear();
     unsigned int columnCount = std::stoi(_difficulty["CircleSize"]);
     std::cout << "[Map::Object] Loading objects\n";
     std::string s;
@@ -131,11 +135,15 @@ void Map::loadObjects()
         std::getline(_filestream, s);
         ObjectSet::const_iterator pos;
         if (!s.empty())
-            pos = _objects.emplace(s, columnCount);
-        if (pos->isLN())
-            _endOffset = pos->getEndTime();
-        else
-            _endOffset = pos->getStartTime();
+        {
+            Object object(s, columnCount);
+            if (object.isLN())
+                _endOffset = std::max(
+                    _endOffset, _LNs.insert(std::move(object))->getEndTime());
+            else
+                _endOffset = std::max(
+                    _endOffset, _notes.insert(std::move(object))->getStartTime());
+        }
     }
 }
 
@@ -159,7 +167,9 @@ const Map::TimingPointSet &Map::getInheritedTimingPoints() const
     return _inheritedPoints;
 }
 
-const Map::ObjectSet &Map::getObjects() const { return _objects; }
+const Map::ObjectSet &Map::getNotes() const { return _notes; }
+
+const Map::ObjectSet &Map::getLNs() const { return _LNs; }
 
 double Map::getBaseBPM() const { return _baseBPM; }
 

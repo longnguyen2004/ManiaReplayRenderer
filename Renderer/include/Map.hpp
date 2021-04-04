@@ -52,7 +52,8 @@ public:
 
     const TimingPointSet &getUninheritedTimingPoints() const;
     const TimingPointSet &getInheritedTimingPoints() const;
-    const ObjectSet &getObjects() const;
+    const ObjectSet &getNotes() const;
+    const ObjectSet &getLNs() const;
     double getBaseBPM() const;
     std::int64_t getLeadIn() const;
     std::int64_t getEndOffset() const;
@@ -63,7 +64,7 @@ private:
     std::string _parentDir, _BGname;
     TimingPointSet _uninheritedPoints;
     TimingPointSet _inheritedPoints;
-    ObjectSet _objects;
+    ObjectSet _notes, _LNs;
     double _baseBPM;
     std::int64_t _leadIn;
     std::int64_t _endOffset;
